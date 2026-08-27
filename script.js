@@ -15,3 +15,23 @@ function mostraSezione(nome) {
         block: "center"
     });
 }
+const loadingText = document.querySelector("#loading-screen p");
+
+const testiCaricamento = [
+    "Caricamento...",
+    "Caricamento..",
+    "Caricamento.",
+    "Caricamento..."
+];
+
+let indiceCaricamento = 0;
+
+setInterval(() => {
+    indiceCaricamento++;
+
+    if (indiceCaricamento >= testiCaricamento.length) {
+        indiceCaricamento = 0;
+    }
+
+    loadingText.textContent = testiCaricamento[indiceCaricamento];
+}, 400);
