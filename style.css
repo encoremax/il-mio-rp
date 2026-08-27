@@ -415,29 +415,37 @@ footer p {
 .titolo-sangue::after {
     content: "";
     position: absolute;
-    left: 15%;
-    bottom: -8px;
-    width: 70%;
-    height: 12px;
+
+    left: 10%;
+    bottom: -10px;
+
+    width: 80%;
+    height: 18px;
 
     background: #650000;
-    filter: blur(2px);
 
     clip-path: polygon(
-        0% 20%,
-        12% 50%,
-        25% 15%,
-        38% 70%,
-        52% 30%,
-        65% 80%,
-        78% 35%,
+        0% 40%,
+        8% 30%,
+        15% 55%,
+        23% 20%,
+        32% 65%,
+        42% 35%,
+        50% 70%,
+        60% 25%,
+        70% 55%,
+        80% 30%,
         90% 60%,
-        100% 20%,
+        100% 35%,
         100% 100%,
         0% 100%
     );
 
-    opacity: 0.8;
+    filter: blur(1px);
+
+    opacity: 0.75;
+
+    pointer-events: none;
 }
 .entra-btn {
     display: inline-block;
@@ -493,4 +501,820 @@ footer p {
     margin-bottom: 20px;
 
     border: 1px solid #8a2be2;
+}
+@media (max-width: 600px) {
+     .modello-poteri {
+        width: 92%;
+        margin: 40px auto;
+    }
+
+    .modello-poteri h2 {
+        font-size: 30px;
+        letter-spacing: 2px;
+    }
+
+    .modello-poteri > p {
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+
+    .poteri-container {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .potere-card {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 18px 15px;
+
+        border-radius: 12px;
+    }
+
+    .atomo {
+        width: 150px;
+        height: 150px;
+
+        margin: 0 auto 10px;
+    }
+
+    .nucleo {
+        width: 38px;
+        height: 38px;
+    }
+
+    .orbita {
+        width: 135px;
+        height: 52px;
+
+        border-width: 1px;
+    }
+
+    .potere-card h3 {
+        font-size: 21px;
+        margin: 8px 0;
+    }
+
+    .potere-card p {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    /* Titolo */
+    h1 {
+        font-size: 55px;
+        letter-spacing: 2px;
+        margin-top: 70px;
+    }
+
+    /* Sottotitolo */
+    .hero p {
+        font-size: 17px;
+        padding: 0 20px;
+    }
+
+    /* Navbar */
+    nav {
+        height: auto;
+        min-height: 65px;
+        padding: 10px 15px;
+
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .nav-links button {
+        padding: 7px 10px;
+        font-size: 12px;
+    }
+
+    /* Pulsanti centrali */
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .menu button {
+        width: 80%;
+        min-width: 0;
+    }
+
+    /* Informazioni */
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Personaggi */
+    .personaggi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .personaggio-img {
+    display: block;
+    width: 100%;
+    height: 220px;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 10px;
+    margin-bottom: 20px;
+
+    border: 1px solid #8a2be2;
+
+    box-shadow:
+        0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+    /* Sezioni */
+    .sezione {
+        width: 85%;
+        padding: 20px;
+    }
+}
+.particelle {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    background-image:
+        radial-gradient(circle, #b84cff 1px, transparent 2px),
+        radial-gradient(circle, #8a2be2 1px, transparent 2px),
+        radial-gradient(circle, #ffffff 1px, transparent 2px);
+
+    background-size: 120px 120px, 180px 180px, 250px 250px;
+
+    animation: particelle 15s linear infinite;
+
+    opacity: 0.35;
+}
+
+@keyframes particelle {
+    from {
+        background-position: 0 0, 40px 60px, 100px 20px;
+    }
+
+    to {
+        background-position: 120px 120px, 220px 240px, 350px 170px;
+    }
+}
+.personaggio {
+    position: relative;
+    overflow: hidden;
+}
+
+.personaggio::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -50%;
+
+    width: 200%;
+    height: 200%;
+
+    background: radial-gradient(
+        circle,
+        rgba(138, 43, 226, 0.15),
+        transparent 60%
+    );
+
+    pointer-events: none;
+}
+.sezione {
+    animation: comparsa 0.6s ease;
+}
+
+@keyframes comparsa {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 20%;
+    left: 50%;
+
+    width: 500px;
+    height: 500px;
+
+    transform: translate(-50%, -50%);
+
+    background: radial-gradient(
+        circle,
+        rgba(138, 43, 226, 0.18),
+        transparent 70%
+    );
+
+    filter: blur(30px);
+    pointer-events: none;
+    z-index: -1;
+
+    animation: aloneViola 8s ease-in-out infinite alternate;
+}
+
+@keyframes aloneViola {
+    from {
+        transform: translate(-60%, -50%) scale(0.9);
+    }
+
+    to {
+        transform: translate(-40%, -50%) scale(1.1);
+    }
+    .hero {
+    padding: 20px 10px;
+}
+
+.menu {
+    width: 100%;
+}
+
+.menu button {
+    width: 85%;
+}
+
+.entra-btn {
+    padding: 14px 25px;
+    font-size: 16px;
+}
+
+.lore-box {
+    width: auto;
+}
+
+footer {
+    margin-top: 60px;
+}
+
+}
+.titolo-sangue {
+    animation: glitch 4s infinite;
+}
+
+@keyframes glitch {
+    0%, 90%, 100% {
+        transform: translate(0);
+    }
+
+    91% {
+        transform: translate(-3px, 2px);
+    }
+
+    92% {
+        transform: translate(3px, -2px);
+    }
+
+    93% {
+        transform: translate(-2px, 0);
+    }
+
+    94% {
+        transform: translate(2px, 1px);
+    }
+
+    95% {
+        transform: translate(0);
+    }
+}
+#loading-screen {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: #050008;
+
+    z-index: 9999;
+
+    animation: loadingFade 2s ease forwards;
+}
+
+#loading-screen h2 {
+    font-size: 55px;
+    color: white;
+
+    text-shadow:
+        0 0 10px #8a2be2,
+        0 0 30px #8a2be2,
+        0 0 60px #8a2be2;
+
+    letter-spacing: 5px;
+}
+
+#loading-screen p {
+    color: #b84cff;
+    font-size: 16px;
+
+    animation: loadingText 1s ease-in-out infinite alternate;
+}
+
+@keyframes loadingText {
+    from {
+        opacity: 0.3;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes loadingFade {
+    0%, 70% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+.loading-bar {
+    width: 250px;
+    height: 4px;
+
+    margin-top: 15px;
+
+    background: #18002b;
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.loading-progress {
+    width: 0%;
+    height: 100%;
+
+    background: #8a2be2;
+
+    box-shadow:
+        0 0 10px #8a2be2,
+        0 0 25px #8a2be2;
+
+    animation: caricamento 2s linear forwards;
+}
+
+@keyframes caricamento {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            transparent 0%,
+            rgba(0, 0, 0, 0.15) 45%,
+            rgba(0, 0, 0, 0.65) 100%
+        );
+
+    pointer-events: none;
+    z-index: 1;
+}.personaggio {
+    animation: galleggia 4s ease-in-out infinite;
+}
+
+.personaggio:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.personaggio:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes galleggia {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+.personaggio {
+    position: relative;
+    overflow: hidden;
+}
+
+.personaggio::after {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 60%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.15),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+
+    animation: riflesso 5s infinite;
+    pointer-events: none;
+}
+
+@keyframes riflesso {
+    0%, 60% {
+        left: -120%;
+    }
+
+    80% {
+        left: 140%;
+    }
+
+    100% {
+        left: 140%;
+    }
+}
+.menu button {
+    transition: 0.3s ease;
+}
+
+.menu button:hover {
+    transform: translateY(-8px) scale(1.04);
+
+    background: #8a2be2;
+
+    box-shadow:
+        0 0 15px #8a2be2,
+        0 0 35px #8a2be2,
+        0 0 60px rgba(138, 43, 226, 0.8);
+}
+/* =========================
+   MODELLO POTERI
+========================= */
+
+.modello-poteri {
+    width: 90%;
+    max-width: 1200px;
+    margin: 80px auto;
+    text-align: center;
+}
+
+.modello-poteri h2 {
+    color: white;
+    font-size: 38px;
+    letter-spacing: 3px;
+
+    text-shadow:
+        0 0 10px #8a2be2,
+        0 0 25px #8a2be2;
+
+    margin-bottom: 10px;
+}
+
+.modello-poteri > p {
+    color: #cfcfcf;
+    font-size: 17px;
+    margin-bottom: 50px;
+}
+
+.poteri-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.potere-card {
+    padding: 30px 20px;
+
+    background: rgba(10, 0, 20, 0.8);
+
+    border: 1px solid #8a2be2;
+    border-radius: 15px;
+
+    box-shadow:
+        0 0 10px rgba(138, 43, 226, 0.3);
+
+    overflow: hidden;
+
+    transition: 0.3s ease;
+}
+
+.potere-card:hover {
+    transform: translateY(-10px);
+
+    box-shadow:
+        0 0 20px #8a2be2,
+        0 0 45px rgba(138, 43, 226, 0.5);
+}
+
+/* ATOMO */
+
+.atomo {
+    position: relative;
+
+    width: 230px;
+    height: 230px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Nucleo */
+
+.atomo::before {
+    content: "";
+
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    background: var(--colore-potere);
+
+    box-shadow:
+        0 0 15px var(--colore-potere),
+        0 0 35px var(--colore-potere),
+        0 0 70px var(--colore-potere);
+
+    animation: nucleo 2s ease-in-out infinite alternate;
+}
+
+/* Orbite */
+
+.atomo::after {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 75px;
+
+    border: 2px solid var(--colore-potere);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 10px var(--colore-potere);
+
+    transform: rotate(35deg);
+
+    animation: orbita 3s linear infinite;
+}
+
+/* Seconda orbita */
+
+.orbita-secondaria {
+    position: absolute;
+
+    width: 190px;
+    height: 75px;
+
+    border: 2px solid var(--colore-potere);
+
+    border-radius: 50%;
+
+    transform: rotate(-35deg);
+
+    box-shadow:
+        0 0 10px var(--colore-potere);
+
+    animation: orbita 3s linear infinite reverse;
+}
+
+/* Terza orbita */
+
+.orbita-terziaria {
+    position: absolute;
+
+    width: 190px;
+    height: 75px;
+
+    border: 2px solid var(--colore-potere);
+
+    border-radius: 50%;
+
+    transform: rotate(90deg);
+
+    opacity: 0.7;
+
+    animation: orbita 4s linear infinite;
+}
+
+/* Movimento */
+
+@keyframes orbita {
+    from {
+        transform: rotate(0deg) rotateX(65deg);
+    }
+
+    to {
+        transform: rotate(360deg) rotateX(65deg);
+    }
+}
+
+@keyframes nucleo {
+    from {
+        transform: scale(0.9);
+    }
+
+    to {
+        transform: scale(1.1);
+    }
+}
+
+/* Colori dei tre poteri */
+
+.potere-arancione {
+    --colore-potere: #ff6a00;
+}
+
+.potere-nero {
+    --colore-potere: #ffffff;
+}
+
+.potere-rosso {
+    --colore-potere: #ff0000;
+}
+
+.potere-card h3 {
+    font-size: 25px;
+    margin-bottom: 12px;
+
+    color: var(--colore-potere);
+
+    text-shadow:
+        0 0 10px var(--colore-potere),
+        0 0 20px var(--colore-potere);
+}
+
+.potere-card p {
+    color: #ddd;
+    line-height: 1.6;
+}
+.poteri-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.potere-card {
+    padding: 30px 20px;
+
+    background: rgba(10, 0, 20, 0.9);
+
+    border: 1px solid #8a2be2;
+    border-radius: 15px;
+
+    box-shadow:
+        0 0 15px rgba(138, 43, 226, 0.4);
+
+    transition: 0.3s ease;
+}
+
+.potere-card:hover {
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 0 20px #8a2be2,
+        0 0 40px rgba(138, 43, 226, 0.7);
+}
+.atomo {
+    position: relative;
+
+    width: 220px;
+    height: 220px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nucleo {
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    background: var(--colore);
+    
+    box-shadow:
+        0 0 15px var(--colore),
+        0 0 35px var(--colore),
+        0 0 70px var(--colore);
+
+    animation: pulsazione 2s ease-in-out infinite alternate;
+
+    z-index: 2;
+}
+.orbita {
+    position: absolute;
+
+    width: 190px;
+    height: 75px;
+
+    border: 2px solid var(--colore);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 10px var(--colore),
+        0 0 20px var(--colore);
+
+    animation: rotazione 3s linear infinite;
+}
+
+.orbita-1 {
+    transform: rotate(0deg);
+}
+
+.orbita-2 {
+    transform: rotate(60deg);
+    animation-duration: 4s;
+}
+
+.orbita-3 {
+    transform: rotate(120deg);
+    animation-duration: 5s;
+}
+@keyframes rotazione {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+@keyframes pulsazione {
+
+    from {
+        transform: scale(0.9);
+    }
+
+    to {
+        transform: scale(1.1);
+    }
+
+}
+.potere-arancione-nero {
+    --colore: #ff6a00;
+}
+
+.potere-arancione-nero .nucleo {
+    background: linear-gradient(
+        135deg,
+        #ff6a00 50%,
+        #050505 50%
+    );
+}
+.potere-nero {
+    --colore: #ffffff;
+}
+
+.potere-nero .nucleo {
+    background: #050505;
+
+    border: 3px solid #222;
+}
+.potere-rosso {
+    --colore: #ff0000;
 }
