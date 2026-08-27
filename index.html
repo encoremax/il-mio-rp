@@ -9,6 +9,16 @@
 </head>
 
 <body>
+
+    <div id="loading-screen">
+    <h2>SILENT SCREAM</h2>
+    <p>Caricamento...</p>
+
+    <div class="loading-bar">
+    <div class="loading-progress"></div>
+</div>
+</div>
+    <div class="particelle"></div>
     <nav>
     <div class="logo">Silent Scream</div>
 
@@ -33,6 +43,7 @@
     <button onclick="mostraSezione('regole')">Regole</button>
     <button onclick="mostraSezione('lore')">Lore</button>
     <button onclick="mostraSezione('personaggi')">Personaggi</button>
+<button onclick="mostraSezione('poteri')">Poteri</button>
 </div>
 
 <div id="contenuto">
@@ -109,6 +120,65 @@
     </div>
 </section>
 
+<section id="poteri" class="sezione modello-poteri">
+
+    <h2>Modello Poteri</h2>
+
+    <p>Seleziona un potere.</p>
+
+    <div class="poteri-container">
+
+        <!-- POTERE ARANCIONE + NERO -->
+        <div class="potere-card potere-arancione-nero">
+
+            <div class="atomo">
+                <div class="nucleo"></div>
+                <div class="orbita orbita-1"></div>
+                <div class="orbita orbita-2"></div>
+                <div class="orbita orbita-3"></div>
+            </div>
+
+            <h3>Atomo del Chaos</h3>
+            <p>Atomo fondatore.</p>
+
+        </div>
+
+
+        <!-- POTERE NERO -->
+        <div class="potere-card potere-nero">
+
+            <div class="atomo">
+                <div class="nucleo"></div>
+                <div class="orbita orbita-1"></div>
+                <div class="orbita orbita-2"></div>
+                <div class="orbita orbita-3"></div>
+            </div>
+
+            <h3>Atomo dell'Abisso</h3>
+            <p>Atomo primario abissale scoperto.</p>
+
+        </div>
+
+
+        <!-- POTERE ROSSO -->
+        <div class="potere-card potere-rosso">
+
+            <div class="atomo">
+                <div class="nucleo"></div>
+                <div class="orbita orbita-1"></div>
+                <div class="orbita orbita-2"></div>
+                <div class="orbita orbita-3"></div>
+            </div>
+
+            <h3>Izanami e Serafino</h3>
+            <p>Atomo collegatore e pilastro.</p>
+
+        </div>
+
+    </div>
+
+</section>
+
     <section id="personaggi" class="sezione">
     <h2>Personaggi</h2>
 
@@ -133,7 +203,7 @@
         </div>
 
         <div class="personaggio">
-            <img src="images/pink.jpg" class="personaggio-img" alt="Pink">
+            <img src="images/pink.jpg" class="personaggio-img">
 
             <h3>Yuki</h3>
             <p>Maestro di illusioni ed Owner RP.</p>
@@ -142,6 +212,50 @@
         </div>
 
     </div>
+
+    <section id="poteri" class="sezione">
+    <h2>Modello Poteri</h2>
+
+    <div class="poteri-grid">
+
+        <div class="potere">
+            <div class="atomo arancione">
+                <div class="nucleo"></div>
+                <div class="orbita orbita1"></div>
+                <div class="orbita orbita2"></div>
+                <div class="orbita orbita3"></div>
+            </div>
+
+            <h3>Potere 1</h3>
+            <p>Descrizione del potere.</p>
+        </div>
+
+        <div class="potere">
+            <div class="atomo nero">
+                <div class="nucleo"></div>
+                <div class="orbita orbita1"></div>
+                <div class="orbita orbita2"></div>
+                <div class="orbita orbita3"></div>
+            </div>
+
+            <h3>Potere 2</h3>
+            <p>Descrizione del potere.</p>
+        </div>
+
+        <div class="potere">
+            <div class="atomo rosso">
+                <div class="nucleo"></div>
+                <div class="orbita orbita1"></div>
+                <div class="orbita orbita2"></div>
+                <div class="orbita orbita3"></div>
+            </div>
+
+            <h3>Potere 3</h3>
+            <p>Descrizione del potere.</p>
+        </div>
+
+    </div>
+</section>
 </section>
 
 </div>
