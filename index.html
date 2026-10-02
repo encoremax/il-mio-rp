@@ -1,269 +1,6962 @@
+```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Mio RP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#070707">
+<title>Silent Scream — RP Universe</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+/* =========================================================
+   SILENT SCREAM RP — MATTER ENGINE
+   SINGLE FILE
+   ========================================================= */
+
+:root{
+    --accent:#ff1f35;
+    --accent2:#ff5b6c;
+    --accentDark:#8f0717;
+
+    --bg:#050505;
+    --bg2:#09090b;
+    --panel:#0d0d10;
+    --panel2:#111116;
+    --panel3:#16161b;
+
+    --text:#f5f5f7;
+    --muted:#85858e;
+    --dim:#505058;
+
+    --border:rgba(255,255,255,.075);
+    --accentBorder:rgba(255,31,53,.3);
+
+    --radius:20px;
+    --sidebar:265px;
+
+    --uiScale:1;
+    --glowStrength:1;
+
+    --ease:cubic-bezier(.2,.8,.2,1);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    background:
+        radial-gradient(
+            circle at 75% 10%,
+            rgba(255,31,53,.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 10% 90%,
+            rgba(255,31,53,.035),
+            transparent 30%
+        ),
+        var(--bg);
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    overflow-x:hidden;
+    transition:
+        background .5s ease,
+        color .4s ease;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    -webkit-tap-highlight-color:transparent;
+}
+
+body.noMotion *,
+body.noMotion *::before,
+body.noMotion *::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+}
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+
+#stars{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    pointer-events:none;
+    opacity:.8;
+}
+
+.noise{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    opacity:.025;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.15) 0 1px,
+            transparent 1px 4px
+        );
+}
+
+.scan{
+    position:fixed;
+    left:0;
+    right:0;
+    top:-5px;
+    height:1px;
+    z-index:2;
+    pointer-events:none;
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--accent),
+            transparent
+        );
+    opacity:.25;
+    animation:scan 9s linear infinite;
+}
+
+@keyframes scan{
+    to{
+        top:105%;
+    }
+}
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app{
+    position:relative;
+    z-index:3;
+    min-height:100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar{
+    position:fixed;
+    z-index:100;
+    left:16px;
+    top:16px;
+    bottom:16px;
+    width:var(--sidebar);
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+
+    border:1px solid var(--border);
+    border-radius:26px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(17,17,20,.94),
+            rgba(7,7,8,.96)
+        );
+
+    backdrop-filter:blur(24px);
+
+    box-shadow:
+        0 30px 90px rgba(0,0,0,.55);
+
+    transition:
+        width .4s var(--ease),
+        transform .4s var(--ease);
+}
+
+.logo{
+    height:74px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:5px;
+    margin-bottom:15px;
+}
+
+.logoSymbol{
+    width:45px;
+    height:45px;
+    flex:none;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:14px;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            var(--accent2),
+            var(--accentDark) 62%,
+            #160006
+        );
+
+    box-shadow:
+        0 0 calc(25px * var(--glowStrength))
+        color-mix(
+            in srgb,
+            var(--accent) 40%,
+            transparent
+        );
+
+    font-size:18px;
+    font-weight:950;
+}
+
+.logoText{
+    min-width:0;
+}
+
+.logoTitle{
+    font-size:13px;
+    font-weight:950;
+    letter-spacing:.18em;
+}
+
+.logoSub{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:.12em;
+}
+
+.navigation{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.navButton{
+    width:100%;
+    min-height:45px;
+
+    border:1px solid transparent;
+    border-radius:13px;
+
+    background:transparent;
+    color:var(--muted);
+
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    padding:7px 9px;
+
+    cursor:pointer;
+    transition:
+        background .25s ease,
+        border .25s ease,
+        color .25s ease,
+        transform .25s ease;
+}
+
+.navButton:hover{
+    color:white;
+    background:rgba(255,255,255,.035);
+    transform:translateX(3px);
+}
+
+.navButton.active{
+    color:white;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,31,53,.14),
+            rgba(255,31,53,.025)
+        );
+    border-color:var(--accentBorder);
+    box-shadow:
+        inset 3px 0 var(--accent),
+        0 8px 25px rgba(0,0,0,.2);
+}
+
+.navIcon{
+    width:29px;
+    height:29px;
+    flex:none;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:9px;
+
+    background:rgba(255,255,255,.035);
+
+    font-size:13px;
+}
+
+.navButton.active .navIcon{
+    background:
+        color-mix(
+            in srgb,
+            var(--accent) 15%,
+            transparent
+        );
+    color:var(--accent2);
+}
+
+.navText{
+    font-size:11px;
+    font-weight:800;
+}
+
+.sidebarBottom{
+    margin-top:auto;
+}
+
+.onlineBox{
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:rgba(255,255,255,.025);
+}
+
+.onlineTop{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.onlineLabel{
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:.13em;
+}
+
+.onlineDot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#48ff91;
+    box-shadow:0 0 14px #48ff91;
+}
+
+.onlineText{
+    font-size:11px;
+    font-weight:900;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main{
+    margin-left:calc(var(--sidebar) + 32px);
+    min-height:100vh;
+    padding:0 30px 50px 0;
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+
+    height:72px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5,5,5,.95),
+            rgba(5,5,5,.75),
+            transparent
+        );
+
+    backdrop-filter:blur(10px);
+}
+
+.breadcrumb{
+    display:flex;
+    gap:8px;
+    align-items:center;
+
+    color:var(--muted);
+    font-size:10px;
+    letter-spacing:.05em;
+}
+
+.breadcrumb strong{
+    color:white;
+}
+
+.topActions{
+    display:flex;
+    gap:7px;
+}
+
+.topButton{
+    width:37px;
+    height:37px;
+
+    border:1px solid var(--border);
+    border-radius:11px;
+
+    background:rgba(255,255,255,.035);
+    color:#aaa;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+}
+
+.topButton:hover{
+    color:white;
+    border-color:var(--accentBorder);
+    background:rgba(255,31,53,.07);
+    transform:translateY(-2px);
+}
+
+/* =========================================================
+   PAGES
+   ========================================================= */
+
+.page{
+    display:none;
+    animation:pageIn .45s var(--ease);
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes pageIn{
+    from{
+        opacity:0;
+        transform:translateY(13px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* =========================================================
+   COMMON
+   ========================================================= */
+
+.sectionHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    margin:32px 0 15px;
+}
+
+.sectionTitle{
+    font-size:23px;
+    font-weight:950;
+    letter-spacing:-.045em;
+}
+
+.sectionSubtitle{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.card{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.012)
+        );
+    box-shadow:0 20px 55px rgba(0,0,0,.2);
+}
+
+/* =========================================================
+   HOME HERO
+   ========================================================= */
+
+.hero{
+    position:relative;
+    min-height:450px;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+
+    padding:50px;
+
+    border:1px solid var(--border);
+    border-radius:30px;
+
+    background:
+        radial-gradient(
+            circle at 80% 25%,
+            rgba(255,31,53,.18),
+            transparent 25%
+        ),
+        linear-gradient(
+            135deg,
+            #101012,
+            #070708
+        );
+
+    box-shadow:
+        0 30px 90px rgba(0,0,0,.5);
+}
+
+.heroGrid{
+    position:absolute;
+    inset:0;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.08) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.08) 1px,
+            transparent 1px
+        );
+
+    background-size:45px 45px;
+    opacity:.08;
+
+    mask-image:
+        linear-gradient(
+            90deg,
+            transparent,
+            black 50%,
+            transparent
+        );
+}
+
+.heroContent{
+    position:relative;
+    z-index:2;
+    max-width:730px;
+}
+
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+
+    padding:7px 10px;
+
+    border:1px solid var(--accentBorder);
+    border-radius:999px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--accent) 6%,
+            transparent
+        );
+
+    color:var(--accent2);
+
+    font-size:9px;
+    font-weight:950;
+    letter-spacing:.14em;
+}
+
+.eyebrowDot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 12px var(--accent);
+}
+
+.hero h1{
+    margin-top:19px;
+
+    font-size:
+        clamp(54px,8vw,108px);
+
+    line-height:.85;
+    letter-spacing:-.08em;
+    font-weight:1000;
+}
+
+.hero h1 span{
+    display:block;
+    color:transparent;
+    -webkit-text-stroke:1px rgba(255,255,255,.23);
+}
+
+.heroDescription{
+    max-width:650px;
+    margin-top:25px;
+
+    color:#9999a2;
+    font-size:13px;
+    line-height:1.75;
+}
+
+.heroButtons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:26px;
+}
+
+.primary,
+.secondary{
+    min-height:42px;
+    padding:10px 15px;
+
+    border-radius:12px;
+    cursor:pointer;
+
+    font-size:11px;
+    font-weight:900;
+
+    transition:.3s var(--ease);
+}
+
+.primary{
+    border:1px solid rgba(255,255,255,.08);
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accentDark)
+        );
+
+    box-shadow:
+        0 12px 35px
+        color-mix(
+            in srgb,
+            var(--accent) 18%,
+            transparent
+        );
+}
+
+.primary:hover{
+    transform:translateY(-3px);
+    box-shadow:
+        0 18px 45px
+        color-mix(
+            in srgb,
+            var(--accent) 28%,
+            transparent
+        );
+}
+
+.secondary{
+    border:1px solid var(--border);
+    color:#bbb;
+    background:rgba(255,255,255,.035);
+}
+
+.secondary:hover{
+    color:white;
+    border-color:var(--accentBorder);
+    background:rgba(255,31,53,.06);
+}
+
+.heroCore{
+    position:absolute;
+    right:8%;
+    width:240px;
+    height:240px;
+    display:grid;
+    place-items:center;
+}
+
+.coreRing{
+    position:absolute;
+    inset:0;
+    border:1px solid rgba(255,31,53,.22);
+    border-radius:50%;
+    animation:rotate 17s linear infinite;
+}
+
+.coreRing::before,
+.coreRing::after{
+    content:"";
+    position:absolute;
+    inset:20px;
+    border:1px dashed rgba(255,31,53,.22);
+    border-radius:50%;
+}
+
+.coreRing::after{
+    inset:50px;
+    animation:rotateReverse 8s linear infinite;
+}
+
+.coreSphere{
+    width:76px;
+    height:76px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle at 32% 27%,
+            #ff9ba5,
+            var(--accent) 32%,
+            #300006 67%,
+            #000 70%
+        );
+
+    box-shadow:
+        0 0 35px rgba(255,31,53,.55),
+        0 0 100px rgba(255,31,53,.22);
+
+    animation:corePulse 3s ease-in-out infinite;
+}
+
+@keyframes rotate{
+    to{transform:rotate(360deg)}
+}
+
+@keyframes rotateReverse{
+    to{transform:rotate(-360deg)}
+}
+
+@keyframes corePulse{
+    50%{
+        transform:scale(1.08);
+    }
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.stat{
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:rgba(255,255,255,.025);
+    transition:.3s var(--ease);
+}
+
+.stat:hover{
+    transform:translateY(-4px);
+    border-color:var(--accentBorder);
+}
+
+.statIcon{
+    color:var(--accent2);
+    font-size:15px;
+}
+
+.statNumber{
+    margin-top:13px;
+    font-size:24px;
+    font-weight:950;
+}
+
+.statLabel{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* =========================================================
+   HUB
+   ========================================================= */
+
+.hubGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+}
+
+.hubCard{
+    position:relative;
+    min-height:190px;
+    padding:21px;
+    overflow:hidden;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.01)
+        );
+
+    cursor:pointer;
+
+    transition:.3s var(--ease);
+}
+
+.hubCard:hover{
+    transform:translateY(-6px);
+    border-color:var(--accentBorder);
+    box-shadow:0 20px 55px rgba(0,0,0,.35);
+}
+
+.hubCard.dragging{
+    opacity:.35;
+    transform:scale(.96);
+}
+
+.cardNumber{
+    color:var(--accent2);
+    font-size:9px;
+    font-weight:950;
+    letter-spacing:.14em;
+}
+
+.cardIcon{
+    margin:20px 0 11px;
+    font-size:29px;
+}
+
+.hubCard h3{
+    font-size:16px;
+}
+
+.hubCard p{
+    margin-top:7px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.55;
+}
+
+.dragInfo{
+    margin-top:12px;
+    padding:12px 14px;
+
+    border:1px dashed rgba(255,255,255,.1);
+    border-radius:13px;
+
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* =========================================================
+   DOMAINS
+   ========================================================= */
+
+.domainGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.domain{
+    --domain:#ff1f35;
+
+    position:relative;
+    min-height:360px;
+    overflow:hidden;
+
+    border:1px solid var(--border);
+    border-radius:25px;
+
+    background:#0b0b0d;
+
+    cursor:pointer;
+
+    transition:.35s var(--ease);
+}
+
+.domain:hover{
+    transform:translateY(-8px);
+    border-color:var(--domain);
+    box-shadow:
+        0 25px 65px rgba(0,0,0,.5);
+}
+
+.domain.void{
+    --domain:#7658ff;
+}
+
+.domain.seraph{
+    --domain:#dcdcff;
+}
+
+.domainVisual{
+    position:absolute;
+    inset:0;
+}
+
+.domain.chaos .domainVisual{
+    background:
+        radial-gradient(
+            circle at 60% 35%,
+            rgba(255,31,53,.4),
+            transparent 17%
+        ),
+        repeating-radial-gradient(
+            ellipse at 50% 50%,
+            transparent 0 30px,
+            rgba(255,31,53,.065) 31px 32px
+        );
+}
+
+.domain.void .domainVisual{
+    background:
+        radial-gradient(
+            circle at 50% 38%,
+            rgba(118,88,255,.35),
+            transparent 18%
+        ),
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(50,20,160,.2),
+            transparent 35%
+        );
+}
+
+.domain.seraph .domainVisual{
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(255,255,255,.22),
+            transparent 17%
+        ),
+        repeating-linear-gradient(
+            125deg,
+            transparent 0 23px,
+            rgba(255,255,255,.025) 24px 25px
+        );
+}
+
+.domainVisual::after{
+    content:"";
+
+    position:absolute;
+
+    width:165px;
+    height:165px;
+
+    left:50%;
+    top:42%;
+
+    transform:translate(-50%,-50%);
+
+    border:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--domain) 45%,
+            transparent
+        );
+
+    border-radius:50%;
+
+    animation:domainOrbit 10s linear infinite;
+}
+
+@keyframes domainOrbit{
+    to{
+        transform:
+            translate(-50%,-50%)
+            rotate(360deg);
+    }
+}
+
+.domainContent{
+    position:absolute;
+    z-index:2;
+
+    left:22px;
+    right:22px;
+    bottom:22px;
+}
+
+.domainTag{
+    display:inline-block;
+
+    padding:5px 8px;
+
+    border:1px solid
+        color-mix(
+            in srgb,
+            var(--domain) 35%,
+            transparent
+        );
+
+    border-radius:999px;
+
+    color:var(--domain);
+
+    font-size:8px;
+    font-weight:950;
+    letter-spacing:.13em;
+}
+
+.domain h3{
+    margin-top:11px;
+    font-size:28px;
+}
+
+.domain p{
+    margin-top:6px;
+    color:#92929a;
+    font-size:11px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   ARCHIVE
+   ========================================================= */
+
+.archiveTools{
+    display:flex;
+    gap:8px;
+}
+
+.search{
+    flex:1;
+    height:43px;
+
+    padding:0 14px;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    outline:none;
+
+    color:white;
+    background:rgba(255,255,255,.03);
+
+    font-size:11px;
+}
+
+.search:focus{
+    border-color:var(--accentBorder);
+}
+
+.archiveGrid,
+.factionGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.character,
+.faction{
+    padding:19px;
+
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    background:rgba(255,255,255,.025);
+
+    transition:.3s var(--ease);
+}
+
+.character:hover,
+.faction:hover{
+    transform:translateY(-4px);
+    border-color:var(--accentBorder);
+}
+
+.characterTop{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+
+    display:grid;
+    place-items:center;
+
+    border:1px solid var(--accentBorder);
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,31,53,.3),
+            rgba(255,31,53,.035)
+        );
+
+    font-weight:950;
+}
+
+.characterName{
+    font-size:14px;
+    font-weight:950;
+}
+
+.characterRole{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:9px;
+}
+
+.characterPower{
+    margin-top:15px;
+    padding:10px;
+
+    border:1px solid var(--border);
+    border-radius:11px;
+
+    background:rgba(0,0,0,.25);
+}
+
+.powerLabel{
+    color:var(--dim);
+    font-size:8px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.powerValue{
+    margin-top:4px;
+    color:var(--accent2);
+    font-size:11px;
+    font-weight:900;
+}
+
+.characterDescription,
+.faction p{
+    margin-top:11px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.55;
+}
+
+.faction h4{
+    font-size:13px;
+}
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+.settingsGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:13px;
+}
+
+.setting{
+    padding:21px;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:rgba(255,255,255,.025);
+}
+
+.setting h3{
+    font-size:14px;
+}
+
+.settingDescription{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.55;
+}
+
+.settingRow{
+    margin-top:18px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.settingLabel{
+    font-size:11px;
+    font-weight:800;
+}
+
+.settingSelect{
+    min-width:130px;
+
+    padding:8px 10px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    outline:none;
+
+    color:white;
+    background:#111114;
+
+    font-size:10px;
+}
+
+.colorInput{
+    width:42px;
+    height:32px;
+
+    padding:0;
+
+    border:1px solid var(--border);
+    border-radius:9px;
+
+    background:none;
+
+    overflow:hidden;
+    cursor:pointer;
+}
+
+.range{
+    width:130px;
+    accent-color:var(--accent);
+}
+
+.switch{
+    width:44px;
+    height:24px;
+
+    padding:3px;
+
+    border:1px solid var(--border);
+    border-radius:999px;
+
+    background:#222228;
+
+    cursor:pointer;
+}
+
+.switch span{
+    display:block;
+
+    width:16px;
+    height:16px;
+
+    border-radius:50%;
+
+    background:#777;
+
+    transition:.25s ease;
+}
+
+.switch.on{
+    border-color:var(--accentBorder);
+    background:
+        color-mix(
+            in srgb,
+            var(--accent) 18%,
+            transparent
+        );
+}
+
+.switch.on span{
+    transform:translateX(18px);
+    background:var(--accent);
+    box-shadow:0 0 13px var(--accent);
+}
+
+/* =========================================================
+   MATTER EDITOR
+   ========================================================= */
+
+.matterIntro{
+    position:relative;
+    overflow:hidden;
+
+    padding:25px;
+
+    border:1px solid var(--border);
+    border-radius:23px;
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(255,31,53,.13),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.012)
+        );
+}
+
+.matterIntro h1{
+    font-size:clamp(28px,5vw,52px);
+    letter-spacing:-.06em;
+}
+
+.matterIntro p{
+    max-width:720px;
+    margin-top:10px;
+
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.7;
+}
+
+.matterLayout{
+    display:grid;
+    grid-template-columns:230px minmax(0,1fr);
+    gap:14px;
+    margin-top:14px;
+}
+
+.materialPanel{
+    padding:15px;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.015)
+        );
+}
+
+.panelLabel{
+    color:var(--dim);
+    font-size:8px;
+    font-weight:950;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+}
+
+.materialList{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin-top:11px;
+}
+
+.materialButton{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    width:100%;
+
+    padding:9px;
+
+    border:1px solid transparent;
+    border-radius:12px;
+
+    background:rgba(255,255,255,.025);
+    color:#aaa;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+}
+
+.materialButton:hover{
+    color:white;
+    background:rgba(255,255,255,.05);
+}
+
+.materialButton.active{
+    color:white;
+    border-color:var(--accentBorder);
+    background:
+        rgba(255,31,53,.08);
+}
+
+.materialCube{
+    position:relative;
+
+    width:25px;
+    height:25px;
+
+    flex:none;
+
+    transform:rotate(-30deg) skewX(30deg) scaleY(.86);
+    border-radius:3px;
+
+    background:var(--material);
+    box-shadow:
+        8px 8px 14px
+        color-mix(
+            in srgb,
+            var(--material) 25%,
+            transparent
+        );
+}
+
+.materialCube::before{
+    content:"";
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    top:-7px;
+    left:7px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--material) 75%,
+            white
+        );
+
+    transform:skewY(-30deg);
+    transform-origin:bottom left;
+}
+
+.materialCube::after{
+    content:"";
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    top:-7px;
+    left:-7px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--material) 85%,
+            black
+        );
+
+    transform:skewY(30deg);
+    transform-origin:bottom right;
+}
+
+.materialName{
+    font-size:10px;
+    font-weight:850;
+}
+
+.materialType{
+    margin-top:2px;
+    color:var(--dim);
+    font-size:8px;
+}
+
+.eraserButton{
+    width:100%;
+    margin-top:7px;
+
+    padding:10px;
+
+    border:1px solid var(--border);
+    border-radius:11px;
+
+    background:rgba(255,255,255,.025);
+    color:#aaa;
+
+    cursor:pointer;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+.eraserButton.active{
+    color:white;
+    border-color:rgba(255,255,255,.2);
+    background:rgba(255,255,255,.08);
+}
+
+.editorTools{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    margin-top:14px;
+}
+
+.editorTool{
+    min-height:35px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    color:#aaa;
+    background:rgba(255,255,255,.025);
+
+    cursor:pointer;
+
+    font-size:9px;
+    font-weight:900;
+
+    transition:.2s ease;
+}
+
+.editorTool:hover{
+    color:white;
+    border-color:var(--accentBorder);
+}
+
+.editorTool.danger:hover{
+    border-color:rgba(255,50,50,.5);
+    color:#ff6d7a;
+}
+
+.editorStats{
+    margin-top:13px;
+    padding-top:13px;
+    border-top:1px solid var(--border);
+}
+
+.editorStat{
+    display:flex;
+    justify-content:space-between;
+    margin-top:6px;
+
+    color:var(--muted);
+    font-size:9px;
+}
+
+.editorStat strong{
+    color:white;
+}
+
+/* =========================================================
+   DRAW AREA
+   ========================================================= */
+
+.drawPanel{
+    min-width:0;
+    padding:15px;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:#09090b;
+}
+
+.drawTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:11px;
+}
+
+.drawTitle{
+    font-size:11px;
+    font-weight:950;
+}
+
+.drawHint{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.matterGrid{
+    --columns:18;
+
+    display:grid;
+    grid-template-columns:
+        repeat(
+            var(--columns),
+            minmax(0,1fr)
+        );
+
+    width:100%;
+
+    aspect-ratio:18/12;
+
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(255,31,53,.035),
+            transparent 55%
+        ),
+        #060607;
+
+    user-select:none;
+    touch-action:none;
+}
+
+.cell{
+    position:relative;
+
+    min-width:0;
+    min-height:0;
+
+    border-right:1px solid rgba(255,255,255,.045);
+    border-bottom:1px solid rgba(255,255,255,.045);
+
+    background:rgba(255,255,255,.006);
+
+    cursor:crosshair;
+}
+
+.cell:hover{
+    background:
+        rgba(255,255,255,.05);
+}
+
+.cell.hasMatter{
+    background:
+        rgba(255,255,255,.02);
+}
+
+.cellCube{
+    position:absolute;
+
+    width:58%;
+    height:58%;
+
+    left:21%;
+    top:21%;
+
+    border-radius:3px;
+
+    transform:
+        rotate(-30deg)
+        skewX(30deg)
+        scaleY(.86);
+
+    background:var(--cube);
+
+    box-shadow:
+        5px 5px 10px
+        color-mix(
+            in srgb,
+            var(--cube) 30%,
+            transparent
+        );
+
+    animation:cubeAppear .2s ease-out;
+}
+
+.cellCube::before{
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    top:-28%;
+    left:28%;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--cube) 75%,
+            white
+        );
+
+    transform:skewY(-30deg);
+    transform-origin:bottom left;
+}
+
+.cellCube::after{
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    top:-28%;
+    left:-28%;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--cube) 85%,
+            black
+        );
+
+    transform:skewY(30deg);
+    transform-origin:bottom right;
+}
+
+@keyframes cubeAppear{
+    from{
+        opacity:0;
+        transform:
+            rotate(-30deg)
+            skewX(30deg)
+            scaleY(.86)
+            scale(.2);
+    }
+    to{
+        opacity:1;
+        transform:
+            rotate(-30deg)
+            skewX(30deg)
+            scaleY(.86)
+            scale(1);
+    }
+}
+
+.drawBottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-top:11px;
+}
+
+.designStatus{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.realizeButton{
+    min-height:42px;
+
+    padding:0 18px;
+
+    border:1px solid
+        color-mix(
+            in srgb,
+            var(--accent) 55%,
+            transparent
+        );
+
+    border-radius:12px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accentDark)
+        );
+
+    cursor:pointer;
+
+    font-size:10px;
+    font-weight:950;
+    letter-spacing:.08em;
+
+    box-shadow:
+        0 12px 35px
+        color-mix(
+            in srgb,
+            var(--accent) 18%,
+            transparent
+        );
+
+    transition:.3s var(--ease);
+}
+
+.realizeButton:hover{
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:
+        0 18px 45px
+        color-mix(
+            in srgb,
+            var(--accent) 28%,
+            transparent
+        );
+}
+
+.realizeButton:active{
+    transform:scale(.97);
+}
+
+/* =========================================================
+   REALIZATION STAGE
+   ========================================================= */
+
+.realizationStage{
+    position:fixed;
+    z-index:700;
+    inset:0;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(255,31,53,.11),
+            rgba(0,0,0,.96) 55%
+        );
+
+    backdrop-filter:blur(15px);
+}
+
+.realizationStage.active{
+    display:flex;
+    animation:stageIn .35s ease;
+}
+
+@keyframes stageIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.realizationWindow{
+    position:relative;
+
+    width:min(950px,100%);
+    height:min(680px,90vh);
+
+    overflow:hidden;
+
+    border:1px solid var(--accentBorder);
+    border-radius:28px;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(255,31,53,.06),
+            transparent 45%
+        ),
+        #050506;
+
+    box-shadow:
+        0 50px 140px rgba(0,0,0,.8);
+}
+
+.realizationHeader{
+    position:absolute;
+    z-index:10;
+    left:20px;
+    right:20px;
+    top:18px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.realizationTitle{
+    font-size:12px;
+    font-weight:950;
+    letter-spacing:.12em;
+}
+
+.realizationProgress{
+    position:absolute;
+    left:20px;
+    right:20px;
+    top:55px;
+    height:2px;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,.08);
+}
+
+.realizationProgressBar{
+    width:0%;
+    height:100%;
+    background:var(--accent);
+    box-shadow:0 0 15px var(--accent);
+    transition:width .15s linear;
+}
+
+.closeRealization{
+    width:34px;
+    height:34px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    color:#aaa;
+    background:rgba(255,255,255,.04);
+
+    cursor:pointer;
+}
+
+.closeRealization:hover{
+    color:white;
+    border-color:var(--accentBorder);
+}
+
+.world{
+    position:absolute;
+    inset:0;
+
+    perspective:900px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+.worldFloor{
+    position:absolute;
+
+    width:70%;
+    height:55%;
+
+    left:15%;
+    top:31%;
+
+    transform:
+        rotateX(62deg)
+        rotateZ(-8deg);
+
+    transform-origin:center;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.04) 1px,
+            transparent 1px
+        );
+
+    background-size:30px 30px;
+
+    opacity:.35;
+
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.spawnCube{
+    position:absolute;
+
+    width:28px;
+    height:28px;
+
+    transform-style:preserve-3d;
+
+    opacity:0;
+
+    transform:
+        translate3d(
+            var(--sx),
+            var(--sy),
+            var(--sz)
+        )
+        rotateX(0deg)
+        rotateY(0deg)
+        scale(.15);
+
+    animation:
+        materialize
+        .75s
+        var(--delay)
+        cubic-bezier(.15,.85,.25,1)
+        forwards;
+}
+
+.spawnCube .face{
+    position:absolute;
+    width:28px;
+    height:28px;
+
+    background:var(--cube);
+
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.spawnCube .front{
+    transform:translateZ(14px);
+}
+
+.spawnCube .back{
+    transform:rotateY(180deg) translateZ(14px);
+}
+
+.spawnCube .right{
+    transform:
+        rotateY(90deg)
+        translateZ(14px);
+}
+
+.spawnCube .left{
+    transform:
+        rotateY(-90deg)
+        translateZ(14px);
+}
+
+.spawnCube .top{
+    transform:
+        rotateX(90deg)
+        translateZ(14px);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--cube) 72%,
+            white
+        );
+}
+
+.spawnCube .bottom{
+    transform:
+        rotateX(-90deg)
+        translateZ(14px);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--cube) 75%,
+            black
+        );
+}
+
+@keyframes materialize{
+    0%{
+        opacity:0;
+
+        transform:
+            translate3d(
+                var(--sx),
+                var(--sy),
+                var(--sz)
+            )
+            rotateX(180deg)
+            rotateY(180deg)
+            scale(.05);
+    }
+
+    55%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:1;
+
+        transform:
+            translate3d(
+                var(--tx),
+                var(--ty),
+                var(--tz)
+            )
+            rotateX(0deg)
+            rotateY(0deg)
+            scale(1);
+    }
+}
+
+.realizationMessage{
+    position:absolute;
+    z-index:20;
+
+    left:50%;
+    bottom:38px;
+
+    transform:translateX(-50%);
+
+    color:#aaa;
+
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+
+    text-align:center;
+    white-space:nowrap;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal{
+    position:fixed;
+    z-index:600;
+    inset:0;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:15px;
+
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(13px);
+}
+
+.modal.open{
+    display:flex;
+    animation:fade .25s ease;
+}
+
+@keyframes fade{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.modalBox{
+    width:min(650px,100%);
+    max-height:90vh;
+    overflow:auto;
+
+    padding:25px;
+
+    border:1px solid var(--accentBorder);
+    border-radius:24px;
+
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(255,31,53,.11),
+            transparent 30%
+        ),
+        #0b0b0d;
+
+    box-shadow:
+        0 40px 120px rgba(0,0,0,.7);
+
+    animation:modalIn .35s var(--ease);
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:translateY(20px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.modalHeader{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+}
+
+.modalTitle{
+    margin-top:8px;
+    font-size:28px;
+    font-weight:950;
+}
+
+.closeModal{
+    width:35px;
+    height:35px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    background:rgba(255,255,255,.04);
+    color:#aaa;
+
+    cursor:pointer;
+}
+
+.closeModal:hover{
+    color:white;
+    border-color:var(--accentBorder);
+}
+
+.modalDescription{
+    margin-top:15px;
+
+    color:#9999a2;
+    font-size:12px;
+    line-height:1.75;
+}
+
+.modalStats{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+    margin-top:18px;
+}
+
+.modalStat{
+    padding:13px;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    background:rgba(255,255,255,.025);
+}
+
+.modalStat span{
+    color:var(--dim);
+    font-size:8px;
+    text-transform:uppercase;
+}
+
+.modalStat strong{
+    display:block;
+    margin-top:5px;
+    font-size:11px;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast{
+    position:fixed;
+    z-index:1000;
+
+    right:22px;
+    bottom:22px;
+
+    max-width:350px;
+
+    padding:13px 15px;
+
+    border:1px solid var(--accentBorder);
+    border-radius:13px;
+
+    background:rgba(12,12,14,.95);
+    backdrop-filter:blur(15px);
+
+    color:#ddd;
+
+    font-size:10px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.5);
+
+    opacity:0;
+    transform:translateY(20px);
+
+    pointer-events:none;
+
+    transition:.3s var(--ease);
+}
+
+.toast.show{
+    opacity:1;
+    transform:none;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer{
+    margin-top:45px;
+    padding-top:22px;
+
+    border-top:1px solid var(--border);
+
+    color:#4d4d55;
+
+    text-align:center;
+
+    font-size:9px;
+}
+
+/* =========================================================
+   RESPONSIVE TABLET
+   ========================================================= */
+
+@media(max-width:1100px){
+
+    :root{
+        --sidebar:225px;
+    }
+
+    .main{
+        margin-left:255px;
+        padding-right:20px;
+    }
+
+    .hero{
+        padding:38px;
+    }
+
+    .heroCore{
+        opacity:.55;
+        right:2%;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hubGrid,
+    .domainGrid,
+    .archiveGrid,
+    .factionGrid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .matterLayout{
+        grid-template-columns:190px minmax(0,1fr);
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:760px){
+
+    body{
+        padding-bottom:80px;
+    }
+
+    .sidebar{
+        left:8px;
+        right:8px;
+        bottom:8px;
+        top:auto;
+
+        width:auto;
+        height:65px;
+
+        padding:6px;
+
+        border-radius:20px;
+
+        flex-direction:row;
+        align-items:center;
+    }
+
+    .logo,
+    .sidebarBottom{
+        display:none;
+    }
+
+    .navigation{
+        width:100%;
+        height:100%;
+
+        display:grid;
+        grid-template-columns:repeat(6,1fr);
+
+        gap:3px;
+    }
+
+    .navButton{
+        min-height:0;
+        height:100%;
+
+        padding:4px 2px;
+
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+
+        gap:2px;
+
+        border-radius:12px;
+    }
+
+    .navButton:hover{
+        transform:none;
+    }
+
+    .navButton.active{
+        box-shadow:
+            inset 0 0 0 1px var(--accentBorder);
+    }
+
+    .navIcon{
+        width:25px;
+        height:23px;
+        font-size:11px;
+    }
+
+    .navText{
+        font-size:7px;
+    }
+
+    .main{
+        margin-left:0;
+        padding:0 10px 25px;
+    }
+
+    .topbar{
+        height:60px;
+    }
+
+    .breadcrumb{
+        font-size:9px;
+    }
+
+    .topButton{
+        width:33px;
+        height:33px;
+    }
+
+    .hero{
+        min-height:565px;
+        padding:27px 19px;
+        align-items:flex-start;
+    }
+
+    .hero h1{
+        font-size:clamp(47px,15vw,75px);
+    }
+
+    .heroDescription{
+        font-size:11px;
+    }
+
+    .heroButtons{
+        display:grid;
+        grid-template-columns:1fr;
+    }
+
+    .primary,
+    .secondary{
+        width:100%;
+    }
+
+    .heroCore{
+        width:210px;
+        height:210px;
+
+        left:50%;
+        right:auto;
+        bottom:-25px;
+
+        transform:translateX(-50%) scale(.75);
+
+        opacity:.55;
+    }
+
+    .sectionHeader{
+        margin-top:27px;
+    }
+
+    .sectionTitle{
+        font-size:20px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+        gap:7px;
+    }
+
+    .stat{
+        padding:14px;
+    }
+
+    .statNumber{
+        font-size:21px;
+    }
+
+    .hubGrid,
+    .domainGrid,
+    .archiveGrid,
+    .factionGrid,
+    .settingsGrid{
+        grid-template-columns:1fr;
+    }
+
+    .domain{
+        min-height:320px;
+    }
+
+    .archiveTools{
+        flex-direction:column;
+    }
+
+    .matterIntro{
+        padding:20px;
+    }
+
+    .matterLayout{
+        grid-template-columns:1fr;
+    }
+
+    .materialPanel{
+        order:2;
+    }
+
+    .drawPanel{
+        order:1;
+    }
+
+    .materialList{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .editorTools{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .editorTool{
+        font-size:8px;
+    }
+
+    .drawBottom{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .realizeButton{
+        width:100%;
+    }
+
+    .drawHint{
+        display:none;
+    }
+
+    .realizationWindow{
+        height:82vh;
+        border-radius:20px;
+    }
+
+    .realizationMessage{
+        bottom:24px;
+        font-size:8px;
+    }
+
+    .modalStats{
+        grid-template-columns:1fr;
+    }
+
+    .toast{
+        left:10px;
+        right:10px;
+        bottom:88px;
+        max-width:none;
+    }
+
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media(max-width:390px){
+
+    .navigation{
+        grid-template-columns:repeat(6,1fr);
+    }
+
+    .navText{
+        font-size:6px;
+    }
+
+    .hero{
+        min-height:535px;
+    }
+
+    .hero h1{
+        font-size:45px;
+    }
+
+    .matterGrid{
+        aspect-ratio:18/13;
+    }
+
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation-duration:.001ms!important;
+        transition-duration:.001ms!important;
+    }
+
+}
+</style>
 </head>
 
 <body>
 
-    <div id="loading-screen">
-    <h2>SILENT SCREAM</h2>
-    <p>Caricamento...</p>
+<canvas id="stars"></canvas>
+<div class="noise"></div>
+<div class="scan"></div>
 
-    <div class="loading-bar">
-    <div class="loading-progress"></div>
-</div>
-</div>
-    <div class="particelle"></div>
-    <nav>
-    <div class="logo">Silent Scream</div>
+<div class="app">
 
-    <div class="nav-links">
-        <button onclick="mostraSezione('info')">Informazioni</button>
-        <button onclick="mostraSezione('regole')">Regole</button>
-        <button onclick="mostraSezione('lore')">Lore</button>
-        <button onclick="mostraSezione('personaggi')">Personaggi</button>
+<!-- =======================================================
+     SIDEBAR
+     ======================================================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logoSymbol">S</div>
+
+        <div class="logoText">
+            <div
+                class="logoTitle"
+                id="logoTitle"
+            >
+                SILENT SCREAM
+            </div>
+
+            <div
+                class="logoSub"
+                id="logoSub"
+            >
+                ROLEPLAY NETWORK
+            </div>
+        </div>
+
     </div>
-</nav>
+
+    <nav class="navigation">
+
+        <button
+            class="navButton active"
+            data-page="home"
+        >
+            <span class="navIcon">⌂</span>
+            <span class="navText">Home</span>
+        </button>
+
+        <button
+            class="navButton"
+            data-page="hub"
+        >
+            <span class="navIcon">◈</span>
+            <span class="navText">Hub</span>
+        </button>
+
+        <button
+            class="navButton"
+            data-page="domains"
+        >
+            <span class="navIcon">◉</span>
+            <span class="navText">Domini</span>
+        </button>
+
+        <button
+            class="navButton"
+            data-page="archive"
+        >
+            <span class="navIcon">▣</span>
+            <span class="navText">Archivio</span>
+        </button>
+
+        <button
+            class="navButton"
+            data-page="matter"
+        >
+            <span class="navIcon">◆</span>
+            <span class="navText">Materia</span>
+        </button>
+
+        <button
+            class="navButton"
+            data-page="settings"
+        >
+            <span class="navIcon">⚙</span>
+            <span class="navText">Setup</span>
+        </button>
+
+    </nav>
+
+    <div class="sidebarBottom">
+
+        <div class="onlineBox">
+
+            <div class="onlineTop">
+                <span class="onlineLabel">
+                    NETWORK
+                </span>
+
+                <span class="onlineDot"></span>
+            </div>
+
+            <div class="onlineText">
+                SILENT SCREAM ONLINE
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+<!-- =======================================================
+     MAIN
+     ======================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        <span>SILENT SCREAM</span>
+        <span>/</span>
+        <strong id="breadcrumb">
+            HOME
+        </strong>
+    </div>
+
+    <div class="topActions">
+
+        <button
+            class="topButton"
+            id="randomAccent"
+            title="Colore casuale"
+        >✦</button>
+
+        <button
+            class="topButton"
+            id="resetButton"
+            title="Ripristina"
+        >↻</button>
+
+    </div>
+
+</header>
+
+<!-- =======================================================
+     HOME
+     ======================================================= -->
+
+<section
+    class="page active"
+    id="page-home"
+>
 
 <div class="hero">
-    <h1 class="titolo-sangue">SILENT SCREAM RP</h1>
-    <p>Benvenuto nel rp Silent Scream</p>
 
-     
-</div>
-    
+    <div class="heroGrid"></div>
 
-    <div class="menu">
-    <button onclick="mostraSezione('info')">Informazioni</button>
-    <button onclick="mostraSezione('regole')">Regole</button>
-    <button onclick="mostraSezione('lore')">Lore</button>
-    <button onclick="mostraSezione('personaggi')">Personaggi</button>
-<button onclick="mostraSezione('poteri')">Poteri</button>
-</div>
+    <div class="heroContent">
 
-<div id="contenuto">
-
-    <section id="info" class="sezione">
-    <h2>Informazioni</h2>
-
-    <div class="info-grid">
-
-        <div class="info-box">
-            <h3>Creatori RP</h3>
-            <p>Mob,Alex e Yuki</p>
+        <div class="eyebrow">
+            <span class="eyebrowDot"></span>
+            SILENT SCREAM RP — SYSTEM ONLINE
         </div>
 
-        <div class="info-box">
-            <h3>Versione</h3>
-            <p>1.0</p>
-        </div>
+        <h1>
+            SILENT
+            <span>SCREAM</span>
+        </h1>
 
-        <div class="info-box">
-            <h3>Stato</h3>
-            <p>In sviluppo</p>
-        </div>
-
-        <div class="info-box">
-            <h3>Descrizione</h3>
-            <p>Scream Silent nasce principalmente per divertimento ed esprimere la propria fantasia,inoltre è possibile socializzare con persone veterane o appena unite.</p>
-        </div>
-
-    </div>
-</section>
-
-    <section id="regole" class="sezione">
-    <h2>Regole</h2>
-
-    <div class="regola">
-        <span>01</span>
-        <p>Rispetta tutti i giocatori.</p>
-    </div>
-
-    <div class="regola">
-        <span>02</span>
-        <p>Non usare bug o exploit.</p>
-    </div>
-
-    <div class="regola">
-        <span>03</span>
-        <p>Rispetta le regole del Roleplay.</p>
-    </div>
-
-    <div class="regola">
-        <span>04</span>
-        <p>Non rovinare l'esperienza agli altri.</p>
-    </div>
-
-</section>
-
-    <section id="lore" class="sezione">
-    <h2>Lore</h2>
-
-    <div class="lore-box">
-        <h3>La storia</h3>
-
-        <p>
-            Qui puoi raccontare la storia del tuo mondo,
-            gli eventi importanti, le fazioni e tutto ciò
-            che riguarda la lore del tuo RP.
+        <p class="heroDescription">
+            Un universo RP costruito attorno a Chaos,
+            Abisso, Serafino e poteri fuori controllo.
+            Ora puoi anche progettare e materializzare
+            direttamente nuove strutture attraverso
+            il sistema Materia.
         </p>
 
-        <p>
-            Puoi dividere la storia in più parti e aggiungere
-            tutti i dettagli che vuoi.
-        </p>
-    </div>
-</section>
+        <div class="heroButtons">
 
-<section id="poteri" class="sezione modello-poteri">
+            <button
+                class="primary"
+                data-go="hub"
+            >
+                ENTRA NELL'HUB →
+            </button>
 
-    <h2>Modello Poteri</h2>
-
-    <p>Seleziona un potere.</p>
-
-    <div class="poteri-container">
-
-        <!-- POTERE ARANCIONE + NERO -->
-        <div class="potere-card potere-arancione-nero">
-
-            <div class="atomo">
-                <div class="nucleo"></div>
-                <div class="orbita orbita-1"></div>
-                <div class="orbita orbita-2"></div>
-                <div class="orbita orbita-3"></div>
-            </div>
-
-            <h3>Atomo del Chaos</h3>
-            <p>Atomo fondatore.</p>
-
-        </div>
-
-
-        <!-- POTERE NERO -->
-        <div class="potere-card potere-nero">
-
-            <div class="atomo">
-                <div class="nucleo"></div>
-                <div class="orbita orbita-1"></div>
-                <div class="orbita orbita-2"></div>
-                <div class="orbita orbita-3"></div>
-            </div>
-
-            <h3>Atomo dell'Abisso</h3>
-            <p>Atomo primario abissale scoperto.</p>
-
-        </div>
-
-
-        <!-- POTERE ROSSO -->
-        <div class="potere-card potere-rosso">
-
-            <div class="atomo">
-                <div class="nucleo"></div>
-                <div class="orbita orbita-1"></div>
-                <div class="orbita orbita-2"></div>
-                <div class="orbita orbita-3"></div>
-            </div>
-
-            <h3>Izanami e Serafino</h3>
-            <p>Atomo collegatore e pilastro.</p>
+            <button
+                class="secondary"
+                data-go="matter"
+            >
+                CREA CON LA MATERIA
+            </button>
 
         </div>
 
     </div>
 
-</section>
+    <div class="heroCore">
 
-    <section id="personaggi" class="sezione">
-    <h2>Personaggi</h2>
-
-    <div class="personaggi-grid">
-
-        <div class="personaggio">
-            <img src="images/chaos.jpg" class="personaggio-img" alt="Chaos">
-
-            <h3>Mob</h3>
-            <p>Owner e utilizzatore del Chaos multimodalità.</p>
-
-            <span>Potere: Chaos</span>
-        </div>
-
-        <div class="personaggio">
-            <img src="images/download.jpg" class="personaggio-img">
-
-            <h3>Alex </h3>
-            <p>Owner e essenza particellare radioattiva dal vuoto.</p>
-
-            <span>Potere: Abisso</span>
-        </div>
-
-        <div class="personaggio">
-            <img src="images/pink.jpg" class="personaggio-img">
-
-            <h3>Yuki</h3>
-            <p>Maestro di illusioni ed Owner RP.</p>
-
-            <span>Potere: Serafino,Illusioni e Izanami</span>
-        </div>
+        <div class="coreRing"></div>
+        <div class="coreSphere"></div>
 
     </div>
-
-    <section id="poteri" class="sezione">
-    <h2>Modello Poteri</h2>
-
-    <div class="poteri-grid">
-
-        <div class="potere">
-            <div class="atomo arancione">
-                <div class="nucleo"></div>
-                <div class="orbita orbita1"></div>
-                <div class="orbita orbita2"></div>
-                <div class="orbita orbita3"></div>
-            </div>
-
-            <h3>Potere 1</h3>
-            <p>Descrizione del potere.</p>
-        </div>
-
-        <div class="potere">
-            <div class="atomo nero">
-                <div class="nucleo"></div>
-                <div class="orbita orbita1"></div>
-                <div class="orbita orbita2"></div>
-                <div class="orbita orbita3"></div>
-            </div>
-
-            <h3>Potere 2</h3>
-            <p>Descrizione del potere.</p>
-        </div>
-
-        <div class="potere">
-            <div class="atomo rosso">
-                <div class="nucleo"></div>
-                <div class="orbita orbita1"></div>
-                <div class="orbita orbita2"></div>
-                <div class="orbita orbita3"></div>
-            </div>
-
-            <h3>Potere 3</h3>
-            <p>Descrizione del potere.</p>
-        </div>
-
-    </div>
-</section>
-</section>
 
 </div>
-<script src="script.js"></script>
-<footer>
-    <p>© 2026 - Scream Silent</p>
-    <p>Creato da: Mob</p>
-    <p>Versione 1.0</p>
+
+<div class="sectionHeader">
+    <div>
+        <div class="sectionTitle">
+            Sistema
+        </div>
+
+        <div class="sectionSubtitle">
+            Stato attuale dell'universo
+        </div>
+    </div>
+</div>
+
+<div class="stats">
+
+    <div class="stat">
+        <div class="statIcon">◈</div>
+        <div class="statNumber">3</div>
+        <div class="statLabel">
+            Domini
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="statIcon">♙</div>
+        <div
+            class="statNumber"
+            id="characterCount"
+        >
+            3
+        </div>
+        <div class="statLabel">
+            Personaggi
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="statIcon">◆</div>
+        <div
+            class="statNumber"
+            id="matterCount"
+        >
+            0
+        </div>
+        <div class="statLabel">
+            Blocchi di materia
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="statIcon">⚡</div>
+        <div class="statNumber">
+            1.0
+        </div>
+        <div class="statLabel">
+            Versione RP
+        </div>
+    </div>
+
+</div>
+
+<div class="sectionHeader">
+    <div>
+        <div class="sectionTitle">
+            Accesso rapido
+        </div>
+
+        <div class="sectionSubtitle">
+            Le sezioni principali
+        </div>
+    </div>
+</div>
+
+<div class="hubGrid">
+
+    <div
+        class="hubCard"
+        data-go="hub"
+    >
+        <div class="cardNumber">
+            01 / HUB
+        </div>
+
+        <div class="cardIcon">
+            ◈
+        </div>
+
+        <h3>
+            Centro dell'universo
+        </h3>
+
+        <p>
+            Lore, regole e informazioni
+            fondamentali.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        data-go="domains"
+    >
+        <div class="cardNumber">
+            02 / DOMINI
+        </div>
+
+        <div class="cardIcon">
+            ◉
+        </div>
+
+        <h3>
+            Chaos · Abisso · Serafino
+        </h3>
+
+        <p>
+            Esplora le tre realtà
+            principali.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        data-go="matter"
+    >
+        <div class="cardNumber">
+            03 / MATERIA
+        </div>
+
+        <div class="cardIcon">
+            ◆
+        </div>
+
+        <h3>
+            Materia programmabile
+        </h3>
+
+        <p>
+            Disegna una struttura e
+            materializzala.
+        </p>
+    </div>
+
+</div>
+
+</section>
+
+<!-- =======================================================
+     HUB
+     ======================================================= -->
+
+<section
+    class="page"
+    id="page-hub"
+>
+
+<div class="sectionHeader">
+
+    <div>
+        <div class="sectionTitle">
+            Hub Centrale
+        </div>
+
+        <div class="sectionSubtitle">
+            Il centro di controllo di Silent Scream
+        </div>
+    </div>
+
+</div>
+
+<div
+    class="hubGrid"
+    id="hubSortable"
+>
+
+    <div
+        class="hubCard"
+        draggable="true"
+        data-card="lore"
+        data-info="lore"
+    >
+        <div class="cardNumber">
+            SYSTEM / 01
+        </div>
+
+        <div class="cardIcon">⌘</div>
+
+        <h3>Lore</h3>
+
+        <p>
+            L'origine del mondo e delle
+            forze che lo governano.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        draggable="true"
+        data-card="rules"
+        data-info="rules"
+    >
+        <div class="cardNumber">
+            SYSTEM / 02
+        </div>
+
+        <div class="cardIcon">▤</div>
+
+        <h3>Regole</h3>
+
+        <p>
+            Le regole fondamentali
+            del Roleplay.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        draggable="true"
+        data-card="powers"
+        data-info="powers"
+    >
+        <div class="cardNumber">
+            SYSTEM / 03
+        </div>
+
+        <div class="cardIcon">✦</div>
+
+        <h3>Poteri</h3>
+
+        <p>
+            Le principali forze registrate.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        draggable="true"
+        data-card="characters"
+        data-go="archive"
+    >
+        <div class="cardNumber">
+            SYSTEM / 04
+        </div>
+
+        <div class="cardIcon">♙</div>
+
+        <h3>Personaggi</h3>
+
+        <p>
+            L'archivio dei protagonisti.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        draggable="true"
+        data-card="domains"
+        data-go="domains"
+    >
+        <div class="cardNumber">
+            SYSTEM / 05
+        </div>
+
+        <div class="cardIcon">◉</div>
+
+        <h3>Domini</h3>
+
+        <p>
+            Le tre realtà dell'universo.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        draggable="true"
+        data-card="matter"
+        data-go="matter"
+    >
+        <div class="cardNumber">
+            SYSTEM / 06
+        </div>
+
+        <div class="cardIcon">◆</div>
+
+        <h3>Materia</h3>
+
+        <p>
+            Costruisci e materializza
+            strutture.
+        </p>
+    </div>
+
+</div>
+
+<div class="dragInfo">
+    ✦ Su PC puoi trascinare le schede per
+    modificarne l'ordine. L'ordine viene salvato
+    automaticamente.
+</div>
+
+<div class="sectionHeader">
+    <div>
+        <div class="sectionTitle">
+            Lore
+        </div>
+
+        <div class="sectionSubtitle">
+            L'origine di Silent Scream
+        </div>
+    </div>
+</div>
+
+<div class="settingsGrid">
+
+    <div class="setting">
+
+        <h3>
+            Quando il silenzio si spezzò
+        </h3>
+
+        <p class="settingDescription">
+            Scream Silent nasce principalmente
+            per divertimento ed esprimere la
+            propria fantasia, creando un universo
+            dove Chaos, Abisso e Serafino possono
+            entrare in collisione.
+        </p>
+
+        <p class="settingDescription">
+            Le energie dei domini possono
+            generare conflitti, alleanze,
+            eventi e nuove possibilità.
+        </p>
+
+    </div>
+
+    <div class="setting">
+
+        <div class="settingRow">
+            <span class="settingLabel">
+                CREATORE
+            </span>
+
+            <strong>Mob · Alex · Yuki</strong>
+        </div>
+
+        <div class="settingRow">
+            <span class="settingLabel">
+                VERSIONE
+            </span>
+
+            <strong>1.0</strong>
+        </div>
+
+        <div class="settingRow">
+            <span class="settingLabel">
+                STATO
+            </span>
+
+            <strong style="color:#48ff91">
+                IN SVILUPPO
+            </strong>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="sectionHeader">
+    <div>
+        <div class="sectionTitle">
+            Regole
+        </div>
+
+        <div class="sectionSubtitle">
+            Le basi del Roleplay
+        </div>
+    </div>
+</div>
+
+<div class="hubGrid">
+
+    <div class="hubCard">
+        <div class="cardNumber">RULE 01</div>
+        <div class="cardIcon">01</div>
+        <h3>Rispetto</h3>
+        <p>
+            Rispetta tutti i giocatori.
+        </p>
+    </div>
+
+    <div class="hubCard">
+        <div class="cardNumber">RULE 02</div>
+        <div class="cardIcon">02</div>
+        <h3>Niente exploit</h3>
+        <p>
+            Non usare bug o exploit.
+        </p>
+    </div>
+
+    <div class="hubCard">
+        <div class="cardNumber">RULE 03</div>
+        <div class="cardIcon">03</div>
+        <h3>Roleplay</h3>
+        <p>
+            Rispetta le regole del RP.
+        </p>
+    </div>
+
+</div>
+
+</section>
+
+<!-- =======================================================
+     DOMAINS
+     ======================================================= -->
+
+<section
+    class="page"
+    id="page-domains"
+>
+
+<div class="sectionHeader">
+
+    <div>
+        <div class="sectionTitle">
+            Domini
+        </div>
+
+        <div class="sectionSubtitle">
+            Tre realtà. Tre energie.
+        </div>
+    </div>
+
+</div>
+
+<div class="domainGrid">
+
+    <article
+        class="domain chaos"
+        data-domain="chaos"
+    >
+
+        <div class="domainVisual"></div>
+
+        <div class="domainContent">
+
+            <span class="domainTag">
+                DOMAIN 01
+            </span>
+
+            <h3>CHAOS</h3>
+
+            <p>
+                Una forza capace di alterare
+                e distruggere l'equilibrio.
+            </p>
+
+        </div>
+
+    </article>
+
+    <article
+        class="domain void"
+        data-domain="void"
+    >
+
+        <div class="domainVisual"></div>
+
+        <div class="domainContent">
+
+            <span class="domainTag">
+                DOMAIN 02
+            </span>
+
+            <h3>ABISSO</h3>
+
+            <p>
+                Il vuoto oltre il vuoto,
+                legato all'essenza dell'oscurità.
+            </p>
+
+        </div>
+
+    </article>
+
+    <article
+        class="domain seraph"
+        data-domain="seraph"
+    >
+
+        <div class="domainVisual"></div>
+
+        <div class="domainContent">
+
+            <span class="domainTag">
+                DOMAIN 03
+            </span>
+
+            <h3>SERAFINO</h3>
+
+            <p>
+                Illusioni, energia e poteri
+                oltre la percezione.
+            </p>
+
+        </div>
+
+    </article>
+
+</div>
+
+<div class="sectionHeader">
+    <div>
+        <div class="sectionTitle">
+            Poteri
+        </div>
+
+        <div class="sectionSubtitle">
+            Energie registrate
+        </div>
+    </div>
+</div>
+
+<div class="hubGrid">
+
+    <div
+        class="hubCard"
+        data-power="chaos"
+    >
+        <div class="cardNumber">POWER</div>
+        <div class="cardIcon">☄</div>
+        <h3>Atomo del Chaos</h3>
+        <p>
+            Energia associata al Chaos.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        data-power="abyss"
+    >
+        <div class="cardNumber">POWER</div>
+        <div class="cardIcon">◌</div>
+        <h3>Atomo dell'Abisso</h3>
+        <p>
+            Essenza proveniente dal vuoto.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        data-power="izanami"
+    >
+        <div class="cardNumber">POWER</div>
+        <div class="cardIcon">✧</div>
+        <h3>Izanami</h3>
+        <p>
+            Potere delle illusioni.
+        </p>
+    </div>
+
+    <div
+        class="hubCard"
+        data-power="seraph"
+    >
+        <div class="cardNumber">POWER</div>
+        <div class="cardIcon">✦</div>
+        <h3>Serafino</h3>
+        <p>
+            Energia del dominio Serafino.
+        </p>
+    </div>
+
+</div>
+
+</section>
+
+<!-- =======================================================
+     ARCHIVE
+     ======================================================= -->
+
+<section
+    class="page"
+    id="page-archive"
+>
+
+<div class="sectionHeader">
+
+    <div>
+        <div class="sectionTitle">
+            Archivio
+        </div>
+
+        <div class="sectionSubtitle">
+            Personaggi e fazioni
+        </div>
+    </div>
+
+</div>
+
+<div class="archiveTools">
+
+    <input
+        id="characterSearch"
+        class="search"
+        placeholder="Cerca personaggio..."
+    >
+
+    <button
+        class="primary"
+        id="addFaction"
+    >
+        + FAZIONE
+    </button>
+
+</div>
+
+<div
+    class="archiveGrid"
+    id="characters"
+    style="margin-top:12px"
+>
+
+    <article
+        class="character"
+        data-name="mob"
+    >
+
+        <div class="characterTop">
+
+            <div class="avatar">M</div>
+
+            <div>
+                <div class="characterName">
+                    Mob
+                </div>
+
+                <div class="characterRole">
+                    OWNER · CHAOS
+                </div>
+            </div>
+
+        </div>
+
+        <div class="characterPower">
+
+            <div class="powerLabel">
+                POTERE
+            </div>
+
+            <div class="powerValue">
+                Chaos
+            </div>
+
+        </div>
+
+        <div class="characterDescription">
+            Principalmente composto dal Chaos.
+        </div>
+
+    </article>
+
+    <article
+        class="character"
+        data-name="alex"
+    >
+
+        <div class="characterTop">
+
+            <div class="avatar">A</div>
+
+            <div>
+                <div class="characterName">
+                    Alex
+                </div>
+
+                <div class="characterRole">
+                    OWNER · ABISSO
+                </div>
+            </div>
+
+        </div>
+
+        <div class="characterPower">
+
+            <div class="powerLabel">
+                POTERE
+            </div>
+
+            <div class="powerValue">
+                Abisso
+            </div>
+
+        </div>
+
+        <div class="characterDescription">
+            Essenza composta da particelle
+            radioattive provenienti dal vuoto.
+        </div>
+
+    </article>
+
+    <article
+        class="character"
+        data-name="yuki"
+    >
+
+        <div class="characterTop">
+
+            <div class="avatar">Y</div>
+
+            <div>
+                <div class="characterName">
+                    Yuki
+                </div>
+
+                <div class="characterRole">
+                    OWNER · SERAFINO
+                </div>
+            </div>
+
+        </div>
+
+        <div class="characterPower">
+
+            <div class="powerLabel">
+                POTERE
+            </div>
+
+            <div class="powerValue">
+                Serafino · Illusioni · Izanami
+            </div>
+
+        </div>
+
+        <div class="characterDescription">
+            Maestro delle illusioni e Owner del RP.
+        </div>
+
+    </article>
+
+</div>
+
+<div class="sectionHeader">
+
+    <div>
+        <div class="sectionTitle">
+            Fazioni
+        </div>
+
+        <div class="sectionSubtitle">
+            Organizzazioni registrate
+        </div>
+    </div>
+
+</div>
+
+<div
+    class="factionGrid"
+    id="factions"
+>
+
+</div>
+
+</section>
+
+<!-- =======================================================
+     MATTER
+     ======================================================= -->
+
+<section
+    class="page"
+    id="page-matter"
+>
+
+<div class="matterIntro">
+
+    <div class="eyebrow">
+        <span class="eyebrowDot"></span>
+        MATTER ENGINE
+    </div>
+
+    <h1>
+        Progetta la materia.
+        <br>
+        <span style="color:var(--accent)">
+            Poi REALIZZALA.
+        </span>
+    </h1>
+
+    <p>
+        Questa è la zona programmabile di Silent Scream.
+        Non usi matite o colori: ogni casella può contenere
+        una vera unità di materia. Costruisci una forma,
+        scegli le energie e premi REALIZZA.
+    </p>
+
+</div>
+
+<div class="matterLayout">
+
+<!-- MATERIALS -->
+
+<div class="materialPanel">
+
+    <div class="panelLabel">
+        MATERIALI
+    </div>
+
+    <div
+        class="materialList"
+        id="materials"
+    >
+
+        <button
+            class="materialButton active"
+            data-material="chaos"
+        >
+            <span
+                class="materialCube"
+                style="--material:#ff243d"
+            ></span>
+
+            <span>
+                <span class="materialName">
+                    Chaos
+                </span>
+
+                <span class="materialType">
+                    Distruzione
+                </span>
+            </span>
+        </button>
+
+        <button
+            class="materialButton"
+            data-material="abyss"
+        >
+            <span
+                class="materialCube"
+                style="--material:#7050ff"
+            ></span>
+
+            <span>
+                <span class="materialName">
+                    Abisso
+                </span>
+
+                <span class="materialType">
+                    Vuoto
+                </span>
+            </span>
+        </button>
+
+        <button
+            class="materialButton"
+            data-material="seraph"
+        >
+            <span
+                class="materialCube"
+                style="--material:#d9d9ff"
+            ></span>
+
+            <span>
+                <span class="materialName">
+                    Serafino
+                </span>
+
+                <span class="materialType">
+                    Illusione
+                </span>
+            </span>
+        </button>
+
+        <button
+            class="materialButton"
+            data-material="plasma"
+        >
+            <span
+                class="materialCube"
+                style="--material:#ff7b20"
+            ></span>
+
+            <span>
+                <span class="materialName">
+                    Plasma
+                </span>
+
+                <span class="materialType">
+                    Energia
+                </span>
+            </span>
+        </button>
+
+        <button
+            class="materialButton"
+            data-material="toxic"
+        >
+            <span
+                class="materialCube"
+                style="--material:#63ff3e"
+            ></span>
+
+            <span>
+                <span class="materialName">
+                    Radiazione
+                </span>
+
+                <span class="materialType">
+                    Instabile
+                </span>
+            </span>
+        </button>
+
+        <button
+            class="materialButton"
+            data-material="void"
+        >
+            <span
+                class="materialCube"
+                style="--material:#15151b"
+            ></span>
+
+            <span>
+                <span class="materialName">
+                    Materia Oscura
+                </span>
+
+                <span class="materialType">
+                    Oscurità
+                </span>
+            </span>
+        </button>
+
+    </div>
+
+    <button
+        class="eraserButton"
+        id="eraser"
+    >
+        ◇ GOMMA
+    </button>
+
+    <div class="editorTools">
+
+        <button
+            class="editorTool"
+            id="undo"
+        >
+            ↶ ANNULLA
+        </button>
+
+        <button
+            class="editorTool"
+            id="redo"
+        >
+            ↷ RIPRISTINA
+        </button>
+
+        <button
+            class="editorTool"
+            id="saveMatter"
+        >
+            💾 SALVA
+        </button>
+
+        <button
+            class="editorTool danger"
+            id="clearMatter"
+        >
+            × SVUOTA
+        </button>
+
+    </div>
+
+    <div class="editorStats">
+
+        <div class="editorStat">
+            <span>Blocchi</span>
+            <strong id="blockCount">
+                0
+            </strong>
+        </div>
+
+        <div class="editorStat">
+            <span>Materiale</span>
+            <strong id="selectedMaterial">
+                Chaos
+            </strong>
+        </div>
+
+        <div class="editorStat">
+            <span>Griglia</span>
+            <strong>
+                18 × 12
+            </strong>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- DRAW -->
+
+<div class="drawPanel">
+
+    <div class="drawTop">
+
+        <div class="drawTitle">
+            MATTER BLUEPRINT
+        </div>
+
+        <div class="drawHint">
+            CLICCA / TRASCINA PER COSTRUIRE
+        </div>
+
+    </div>
+
+    <div
+        class="matterGrid"
+        id="matterGrid"
+    ></div>
+
+    <div class="drawBottom">
+
+        <div
+            class="designStatus"
+            id="designStatus"
+        >
+            Progetto vuoto.
+        </div>
+
+        <button
+            class="realizeButton"
+            id="realize"
+        >
+            ⚡ REALIZZA
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =======================================================
+     SETTINGS
+     ======================================================= -->
+
+<section
+    class="page"
+    id="page-settings"
+>
+
+<div class="sectionHeader">
+
+    <div>
+        <div class="sectionTitle">
+            Personalizzazione
+        </div>
+
+        <div class="sectionSubtitle">
+            Modifica il tuo Silent Scream
+        </div>
+    </div>
+
+</div>
+
+<div class="settingsGrid">
+
+    <div class="setting">
+
+        <h3>
+            Identità
+        </h3>
+
+        <p class="settingDescription">
+            Personalizza nome e sottotitolo
+            dell'interfaccia.
+        </p>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Nome
+            </span>
+
+            <input
+                id="customTitle"
+                class="search"
+                style="max-width:180px"
+                value="SILENT SCREAM"
+            >
+
+        </div>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Sottotitolo
+            </span>
+
+            <input
+                id="customSubtitle"
+                class="search"
+                style="max-width:180px"
+                value="ROLEPLAY NETWORK"
+            >
+
+        </div>
+
+        <div class="settingRow">
+
+            <button
+                class="primary"
+                id="applyIdentity"
+            >
+                APPLICA
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="setting">
+
+        <h3>
+            Colore principale
+        </h3>
+
+        <p class="settingDescription">
+            Puoi cambiare completamente
+            l'accento dell'interfaccia.
+        </p>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Accent
+            </span>
+
+            <input
+                id="accentPicker"
+                class="colorInput"
+                type="color"
+                value="#ff1f35"
+            >
+
+        </div>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Luminosità glow
+            </span>
+
+            <input
+                id="glowRange"
+                class="range"
+                type="range"
+                min=".2"
+                max="2"
+                step=".1"
+                value="1"
+            >
+
+        </div>
+
+    </div>
+
+    <div class="setting">
+
+        <h3>
+            Sfondo
+        </h3>
+
+        <p class="settingDescription">
+            Scegli l'atmosfera generale.
+        </p>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Modalità
+            </span>
+
+            <select
+                id="backgroundSelect"
+                class="settingSelect"
+            >
+                <option value="dark">
+                    Dark
+                </option>
+
+                <option value="red">
+                    Red Void
+                </option>
+
+                <option value="black">
+                    Pure Black
+                </option>
+
+                <option value="purple">
+                    Abyss Purple
+                </option>
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="setting">
+
+        <h3>
+            Movimento
+        </h3>
+
+        <p class="settingDescription">
+            Disattiva le animazioni se vuoi
+            un'interfaccia più statica.
+        </p>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Animazioni
+            </span>
+
+            <button
+                class="switch on"
+                id="motionSwitch"
+            >
+                <span></span>
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="setting">
+
+        <h3>
+            Interfaccia
+        </h3>
+
+        <p class="settingDescription">
+            Controlla la densità generale
+            dell'interfaccia.
+        </p>
+
+        <div class="settingRow">
+
+            <span class="settingLabel">
+                Densità
+            </span>
+
+            <select
+                id="densitySelect"
+                class="settingSelect"
+            >
+                <option value="normal">
+                    Normale
+                </option>
+
+                <option value="compact">
+                    Compatta
+                </option>
+
+                <option value="large">
+                    Grande
+                </option>
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="setting">
+
+        <h3>
+            Dati locali
+        </h3>
+
+        <p class="settingDescription">
+            Progetti Materia, impostazioni,
+            fazioni e layout vengono salvati
+            nel browser.
+        </p>
+
+        <div class="settingRow">
+
+            <button
+                class="secondary"
+                id="resetAll"
+            >
+                RIPRISTINA TUTTO
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="sectionHeader">
+    <div>
+        <div class="sectionTitle">
+            Creatori
+        </div>
+
+        <div class="sectionSubtitle">
+            Silent Scream RP
+        </div>
+    </div>
+</div>
+
+<div class="hubGrid">
+
+    <div class="hubCard">
+        <div class="cardNumber">
+            CREATOR
+        </div>
+
+        <div class="cardIcon">M</div>
+
+        <h3>Mob</h3>
+
+        <p>
+            Owner · Chaos
+        </p>
+    </div>
+
+    <div class="hubCard">
+        <div class="cardNumber">
+            CREATOR
+        </div>
+
+        <div class="cardIcon">A</div>
+
+        <h3>Alex</h3>
+
+        <p>
+            Owner · Abisso
+        </p>
+    </div>
+
+    <div class="hubCard">
+        <div class="cardNumber">
+            CREATOR
+        </div>
+
+        <div class="cardIcon">Y</div>
+
+        <h3>Yuki</h3>
+
+        <p>
+            Owner · Serafino
+        </p>
+    </div>
+
+</div>
+
+</section>
+
+<footer class="footer">
+    © 2026 — Scream Silent · Creato da Mob · Versione 1.0
 </footer>
+
+</main>
+</div>
+
+<!-- =======================================================
+     INFO MODAL
+     ======================================================= -->
+
+<div
+    class="modal"
+    id="infoModal"
+>
+
+<div class="modalBox">
+
+    <div class="modalHeader">
+
+        <div>
+
+            <div
+                class="eyebrow"
+                id="modalEyebrow"
+            >
+                SYSTEM
+            </div>
+
+            <div
+                class="modalTitle"
+                id="modalTitle"
+            >
+                Silent Scream
+            </div>
+
+        </div>
+
+        <button
+            class="closeModal"
+            id="closeModal"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div
+        class="modalDescription"
+        id="modalDescription"
+    ></div>
+
+    <div
+        class="modalStats"
+        id="modalStats"
+    ></div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     REALIZATION
+     ======================================================= -->
+
+<div
+    class="realizationStage"
+    id="realizationStage"
+>
+
+<div class="realizationWindow">
+
+    <div class="realizationHeader">
+
+        <div>
+            <div class="realizationTitle">
+                MATTER REALIZATION
+            </div>
+
+            <div
+                style="
+                margin-top:4px;
+                color:#666;
+                font-size:8px;
+                "
+                id="realizationMaterial"
+            >
+                MATERIALIZING...
+            </div>
+        </div>
+
+        <button
+            class="closeRealization"
+            id="closeRealization"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div class="realizationProgress">
+        <div
+            class="realizationProgressBar"
+            id="realizationProgress"
+        ></div>
+    </div>
+
+    <div class="world">
+
+        <div class="worldFloor"></div>
+
+        <div
+            id="spawnContainer"
+        ></div>
+
+    </div>
+
+    <div class="realizationMessage">
+        LA STRUTTURA STA PRENDENDO FORMA
+    </div>
+
+</div>
+
+</div>
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+<script>
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+const STORAGE_KEY =
+    "silentScreamMatterUltimate";
+
+const state = {
+
+    accent:"#ff1f35",
+
+    background:"dark",
+
+    motion:true,
+
+    density:"normal",
+
+    glow:1,
+
+    title:"SILENT SCREAM",
+
+    subtitle:"ROLEPLAY NETWORK",
+
+    factions:[],
+
+    matter:[],
+
+    matterHistory:[],
+
+    matterFuture:[],
+
+    hubOrder:null
+
+};
+
+function loadState(){
+
+    try{
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem(
+                    STORAGE_KEY
+                )
+            );
+
+        if(saved){
+            Object.assign(
+                state,
+                saved
+            );
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Impossibile caricare dati"
+        );
+
+    }
+
+}
+
+function saveState(){
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(state)
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Impossibile salvare dati"
+        );
+
+    }
+
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+const pageLabels = {
+
+    home:"HOME",
+
+    hub:"HUB",
+
+    domains:"DOMINI",
+
+    archive:"ARCHIVIO",
+
+    matter:"MATERIA",
+
+    settings:"SETUP"
+
+};
+
+function showPage(name){
+
+    const target =
+        document.getElementById(
+            "page-" + name
+        );
+
+    if(!target){
+        return;
+    }
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove(
+                "active"
+            );
+        });
+
+    target.classList.add("active");
+
+    document
+        .querySelectorAll(".navButton")
+        .forEach(button=>{
+
+            button.classList.toggle(
+                "active",
+                button.dataset.page === name
+            );
+
+        });
+
+    document.getElementById(
+        "breadcrumb"
+    ).textContent =
+        pageLabels[name] || name.toUpperCase();
+
+    history.replaceState(
+        null,
+        "",
+        "#" + name
+    );
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+document
+    .querySelectorAll(".navButton")
+    .forEach(button=>{
+
+        button.addEventListener(
+            "click",
+            ()=>{
+                showPage(
+                    button.dataset.page
+                );
+            }
+        );
+
+    });
+
+document
+    .querySelectorAll("[data-go]")
+    .forEach(element=>{
+
+        element.addEventListener(
+            "click",
+            ()=>{
+                showPage(
+                    element.dataset.go
+                );
+            }
+        );
+
+    });
+
+function restorePage(){
+
+    const hash =
+        location.hash.replace("#","");
+
+    if(pageLabels[hash]){
+        showPage(hash);
+    }
+
+}
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+const domainData = {
+
+    chaos:{
+        tag:"DOMAIN 01 · CHAOS",
+        title:"CHAOS",
+        description:
+            "Una forza capace di alterare, distruggere e riscrivere l'equilibrio delle cose. Mob rappresenta il principale collegamento con questa energia.",
+        stats:[
+            ["Owner","Mob"],
+            ["Potere","Chaos"],
+            ["Tipo","Distruttivo"],
+            ["Stato","Attivo"]
+        ]
+    },
+
+    void:{
+        tag:"DOMAIN 02 · ABISSO",
+        title:"ABISSO",
+        description:
+            "Il vuoto oltre il vuoto. Un dominio legato all'oscurità, alle particelle del nulla e all'essenza radioattiva di Alex.",
+        stats:[
+            ["Owner","Alex"],
+            ["Potere","Abisso"],
+            ["Tipo","Void"],
+            ["Stato","Attivo"]
+        ]
+    },
+
+    seraph:{
+        tag:"DOMAIN 03 · SERAFINO",
+        title:"SERAFINO",
+        description:
+            "Un dominio legato alle illusioni, alla percezione e a un'energia superiore associata a Yuki.",
+        stats:[
+            ["Owner","Yuki"],
+            ["Potere","Serafino"],
+            ["Tipo","Illusione"],
+            ["Stato","Attivo"]
+        ]
+    }
+
+};
+
+const powerData = {
+
+    chaos:{
+        tag:"POWER",
+        title:"Atomo del Chaos",
+        description:
+            "Una forma di energia associata al Chaos.",
+        stats:[
+            ["Utilizzatore","Mob"],
+            ["Dominio","Chaos"],
+            ["Categoria","Energia"]
+        ]
+    },
+
+    abyss:{
+        tag:"POWER",
+        title:"Atomo dell'Abisso",
+        description:
+            "Energia legata al vuoto e alle particelle dell'Abisso.",
+        stats:[
+            ["Utilizzatore","Alex"],
+            ["Dominio","Abisso"],
+            ["Categoria","Vuoto"]
+        ]
+    },
+
+    izanami:{
+        tag:"POWER",
+        title:"Izanami",
+        description:
+            "Potere collegato alle illusioni e alla manipolazione percettiva.",
+        stats:[
+            ["Utilizzatore","Yuki"],
+            ["Dominio","Serafino"],
+            ["Categoria","Illusione"]
+        ]
+    },
+
+    seraph:{
+        tag:"POWER",
+        title:"Serafino",
+        description:
+            "Energia superiore collegata al dominio Serafino.",
+        stats:[
+            ["Utilizzatore","Yuki"],
+            ["Dominio","Serafino"],
+            ["Categoria","Energia"]
+        ]
+    }
+
+};
+
+function openInfo(
+    eyebrow,
+    title,
+    description,
+    stats
+){
+
+    document.getElementById(
+        "modalEyebrow"
+    ).textContent = eyebrow;
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent = title;
+
+    document.getElementById(
+        "modalDescription"
+    ).textContent = description;
+
+    const box =
+        document.getElementById(
+            "modalStats"
+        );
+
+    box.innerHTML = "";
+
+    stats.forEach(item=>{
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "modalStat";
+
+        div.innerHTML = `
+            <span>${item[0]}</span>
+            <strong>${item[1]}</strong>
+        `;
+
+        box.appendChild(div);
+
+    });
+
+    document
+        .getElementById(
+            "infoModal"
+        )
+        .classList.add("open");
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+function closeInfo(){
+
+    document
+        .getElementById(
+            "infoModal"
+        )
+        .classList.remove("open");
+
+    document.body.style.overflow =
+        "";
+
+}
+
+document
+    .getElementById("closeModal")
+    .addEventListener(
+        "click",
+        closeInfo
+    );
+
+document
+    .getElementById("infoModal")
+    .addEventListener(
+        "click",
+        event=>{
+
+            if(
+                event.target.id ===
+                "infoModal"
+            ){
+                closeInfo();
+            }
+
+        }
+    );
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(event.key === "Escape"){
+
+            closeInfo();
+
+            closeRealization();
+
+        }
+
+    }
+);
+
+/* =========================================================
+   DOMAIN EVENTS
+   ========================================================= */
+
+document
+    .querySelectorAll("[data-domain]")
+    .forEach(card=>{
+
+        card.addEventListener(
+            "click",
+            ()=>{
+
+                const data =
+                    domainData[
+                        card.dataset.domain
+                    ];
+
+                if(data){
+
+                    openInfo(
+                        data.tag,
+                        data.title,
+                        data.description,
+                        data.stats
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+document
+    .querySelectorAll("[data-power]")
+    .forEach(card=>{
+
+        card.addEventListener(
+            "click",
+            ()=>{
+
+                const data =
+                    powerData[
+                        card.dataset.power
+                    ];
+
+                if(data){
+
+                    openInfo(
+                        data.tag,
+                        data.title,
+                        data.description,
+                        data.stats
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+/* =========================================================
+   HUB INFO
+   ========================================================= */
+
+const hubInfo = {
+
+    lore:{
+        eyebrow:"SYSTEM / LORE",
+        title:"Lore",
+        description:
+            "Silent Scream nasce principalmente per divertimento ed esprimere la propria fantasia. I domini Chaos, Abisso e Serafino costituiscono il nucleo dell'universo.",
+        stats:[
+            ["Universo","Silent Scream"],
+            ["Domini","3"],
+            ["Versione","1.0"],
+            ["Stato","In sviluppo"]
+        ]
+    },
+
+    rules:{
+        eyebrow:"SYSTEM / RULES",
+        title:"Regole",
+        description:
+            "Rispetta tutti i giocatori. Non usare bug o exploit. Rispetta le regole del Roleplay e non rovinare l'esperienza agli altri.",
+        stats:[
+            ["Regole","4"],
+            ["Obiettivo","Fair RP"],
+            ["Stato","Attive"],
+            ["Applicazione","Universale"]
+        ]
+    },
+
+    powers:{
+        eyebrow:"SYSTEM / POWERS",
+        title:"Poteri",
+        description:
+            "Atomo del Chaos, Atomo dell'Abisso, Izanami e Serafino sono le principali energie registrate.",
+        stats:[
+            ["Poteri","4"],
+            ["Domini","3"],
+            ["Utilizzatori","3"],
+            ["Stato","Attivo"]
+        ]
+    }
+
+};
+
+document
+    .querySelectorAll("[data-info]")
+    .forEach(card=>{
+
+        card.addEventListener(
+            "click",
+            event=>{
+
+                if(
+                    card.dataset.info
+                ){
+
+                    event.stopPropagation();
+
+                    const data =
+                        hubInfo[
+                            card.dataset.info
+                        ];
+
+                    if(data){
+
+                        openInfo(
+                            data.eyebrow,
+                            data.title,
+                            data.description,
+                            data.stats
+                        );
+
+                    }
+
+                }
+
+            }
+        );
+
+    });
+
+/* =========================================================
+   CHARACTER SEARCH
+   ========================================================= */
+
+document
+    .getElementById(
+        "characterSearch"
+    )
+    .addEventListener(
+        "input",
+        event=>{
+
+            const query =
+                event.target.value
+                    .toLowerCase()
+                    .trim();
+
+            document
+                .querySelectorAll(
+                    ".character"
+                )
+                .forEach(card=>{
+
+                    const name =
+                        card.dataset.name
+                            .toLowerCase();
+
+                    card.style.display =
+                        name.includes(query)
+                        ? ""
+                        : "none";
+
+                });
+
+        }
+    );
+
+/* =========================================================
+   FACTIONS
+   ========================================================= */
+
+const defaultFactions = [
+
+    {
+        name:"Silent Core",
+        description:
+            "Centro organizzativo dell'universo Silent Scream."
+    },
+
+    {
+        name:"Chaos Order",
+        description:
+            "Gruppo legato alle energie del Chaos."
+    },
+
+    {
+        name:"Voidborn",
+        description:
+            "Entità e individui con connessioni all'Abisso."
+    }
+
+];
+
+function escapeHTML(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
+
+function renderFactions(){
+
+    const container =
+        document.getElementById(
+            "factions"
+        );
+
+    container.innerHTML = "";
+
+    [
+        ...defaultFactions,
+        ...state.factions
+    ].forEach(faction=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "faction";
+
+        div.innerHTML = `
+            <h4>
+                ${escapeHTML(faction.name)}
+            </h4>
+
+            <p>
+                ${escapeHTML(faction.description)}
+            </p>
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+document
+    .getElementById("addFaction")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            const name =
+                prompt(
+                    "Nome della nuova fazione:"
+                );
+
+            if(!name || !name.trim()){
+                return;
+            }
+
+            const description =
+                prompt(
+                    "Descrizione:"
+                ) ||
+                "Nuova fazione di Silent Scream.";
+
+            state.factions.push({
+                name:name.trim(),
+                description:description.trim()
+            });
+
+            saveState();
+
+            renderFactions();
+
+            showToast(
+                "Fazione aggiunta."
+            );
+
+        }
+    );
+
+/* =========================================================
+   MATTER ENGINE
+   ========================================================= */
+
+const GRID_WIDTH = 18;
+const GRID_HEIGHT = 12;
+
+const materials = {
+
+    chaos:{
+        name:"Chaos",
+        color:"#ff243d"
+    },
+
+    abyss:{
+        name:"Abisso",
+        color:"#7050ff"
+    },
+
+    seraph:{
+        name:"Serafino",
+        color:"#d9d9ff"
+    },
+
+    plasma:{
+        name:"Plasma",
+        color:"#ff7b20"
+    },
+
+    toxic:{
+        name:"Radiazione",
+        color:"#63ff3e"
+    },
+
+    void:{
+        name:"Materia Oscura",
+        color:"#15151b"
+    }
+
+};
+
+let selectedMaterial =
+    "chaos";
+
+let eraserActive =
+    false;
+
+let painting =
+    false;
+
+let lastPaintedCell =
+    null;
+
+const matterGrid =
+    document.getElementById(
+        "matterGrid"
+    );
+
+function createGrid(){
+
+    matterGrid.innerHTML = "";
+
+    matterGrid.style
+        .setProperty(
+            "--columns",
+            GRID_WIDTH
+        );
+
+    for(
+        let y=0;
+        y<GRID_HEIGHT;
+        y++
+    ){
+
+        for(
+            let x=0;
+            x<GRID_WIDTH;
+            x++
+        ){
+
+            const cell =
+                document.createElement(
+                    "div"
+                );
+
+            cell.className =
+                "cell";
+
+            cell.dataset.x = x;
+            cell.dataset.y = y;
+
+            cell.addEventListener(
+                "pointerdown",
+                event=>{
+
+                    event.preventDefault();
+
+                    painting = true;
+
+                    paintCell(
+                        x,
+                        y
+                    );
+
+                }
+            );
+
+            cell.addEventListener(
+                "pointerenter",
+                ()=>{
+
+                    if(painting){
+
+                        paintCell(
+                            x,
+                            y
+                        );
+
+                    }
+
+                }
+            );
+
+            cell.addEventListener(
+                "pointermove",
+                event=>{
+
+                    if(
+                        painting &&
+                        event.buttons
+                    ){
+
+                        paintCell(
+                            x,
+                            y
+                        );
+
+                    }
+
+                }
+            );
+
+            matterGrid.appendChild(
+                cell
+            );
+
+        }
+
+    }
+
+    matterGrid.addEventListener(
+        "pointerup",
+        stopPainting
+    );
+
+    matterGrid.addEventListener(
+        "pointerleave",
+        stopPainting
+    );
+
+    renderMatter();
+
+}
+
+function stopPainting(){
+
+    painting = false;
+    lastPaintedCell = null;
+
+}
+
+function getCell(x,y){
+
+    return matterGrid.querySelector(
+        `.cell[data-x="${x}"][data-y="${y}"]`
+    );
+
+}
+
+function getMatterAt(x,y){
+
+    return state.matter.find(
+        block=>
+            block.x === x &&
+            block.y === y
+    );
+
+}
+
+function cloneMatter(){
+
+    return JSON.parse(
+        JSON.stringify(
+            state.matter
+        )
+    );
+
+}
+
+function pushMatterHistory(){
+
+    state.matterHistory.push(
+        cloneMatter()
+    );
+
+    if(
+        state.matterHistory.length >
+        40
+    ){
+
+        state.matterHistory.shift();
+
+    }
+
+    state.matterFuture = [];
+
+}
+
+function paintCell(x,y){
+
+    const key =
+        x + ":" + y;
+
+    if(
+        lastPaintedCell === key
+    ){
+
+        return;
+
+    }
+
+    lastPaintedCell =
+        key;
+
+    const existing =
+        getMatterAt(x,y);
+
+    if(eraserActive){
+
+        if(existing){
+
+            pushMatterHistory();
+
+            state.matter =
+                state.matter.filter(
+                    block=>
+                        !(
+                            block.x === x &&
+                            block.y === y
+                        )
+                );
+
+            renderMatter();
+            saveMatter(false);
+
+        }
+
+        return;
+
+    }
+
+    if(
+        existing &&
+        existing.material ===
+        selectedMaterial
+    ){
+
+        return;
+
+    }
+
+    pushMatterHistory();
+
+    state.matter =
+        state.matter.filter(
+            block=>
+                !(
+                    block.x === x &&
+                    block.y === y
+                )
+        );
+
+    state.matter.push({
+
+        x:x,
+
+        y:y,
+
+        material:selectedMaterial
+
+    });
+
+    renderMatter();
+
+    saveMatter(false);
+
+}
+
+function renderMatter(){
+
+    matterGrid
+        .querySelectorAll(".cell")
+        .forEach(cell=>{
+
+            cell.classList.remove(
+                "hasMatter"
+            );
+
+            cell.innerHTML = "";
+
+        });
+
+    state.matter.forEach(
+        block=>{
+
+            const cell =
+                getCell(
+                    block.x,
+                    block.y
+                );
+
+            if(!cell){
+                return;
+            }
+
+            const material =
+                materials[
+                    block.material
+                ];
+
+            if(!material){
+                return;
+            }
+
+            cell.classList.add(
+                "hasMatter"
+            );
+
+            const cube =
+                document.createElement(
+                    "div"
+                );
+
+            cube.className =
+                "cellCube";
+
+            cube.style.setProperty(
+                "--cube",
+                material.color
+            );
+
+            cube.title =
+                material.name;
+
+            cell.appendChild(
+                cube
+            );
+
+        }
+    );
+
+    updateMatterStats();
+
+}
+
+function updateMatterStats(){
+
+    const count =
+        state.matter.length;
+
+    document.getElementById(
+        "blockCount"
+    ).textContent =
+        count;
+
+    document.getElementById(
+        "matterCount"
+    ).textContent =
+        count;
+
+    document.getElementById(
+        "selectedMaterial"
+    ).textContent =
+        eraserActive
+        ? "Gomma"
+        : materials[
+            selectedMaterial
+          ].name;
+
+    const status =
+        document.getElementById(
+            "designStatus"
+        );
+
+    if(count === 0){
+
+        status.textContent =
+            "Progetto vuoto.";
+
+    }else{
+
+        status.textContent =
+            count +
+            " unità di materia pronte.";
+
+    }
+
+}
+
+/* =========================================================
+   MATERIAL SELECTION
+   ========================================================= */
+
+document
+    .querySelectorAll(
+        ".materialButton"
+    )
+    .forEach(button=>{
+
+        button.addEventListener(
+            "click",
+            ()=>{
+
+                selectedMaterial =
+                    button.dataset.material;
+
+                eraserActive =
+                    false;
+
+                document
+                    .querySelectorAll(
+                        ".materialButton"
+                    )
+                    .forEach(item=>{
+                        item.classList.toggle(
+                            "active",
+                            item === button
+                        );
+                    });
+
+                document
+                    .getElementById(
+                        "eraser"
+                    )
+                    .classList.remove(
+                        "active"
+                    );
+
+                updateMatterStats();
+
+            }
+        );
+
+    });
+
+document
+    .getElementById("eraser")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            eraserActive =
+                !eraserActive;
+
+            document
+                .getElementById(
+                    "eraser"
+                )
+                .classList.toggle(
+                    "active",
+                    eraserActive
+                );
+
+            if(eraserActive){
+
+                document
+                    .querySelectorAll(
+                        ".materialButton"
+                    )
+                    .forEach(
+                        button=>
+                            button.classList
+                                .remove(
+                                    "active"
+                                )
+                    );
+
+            }else{
+
+                const selected =
+                    document.querySelector(
+                        `[data-material="${selectedMaterial}"]`
+                    );
+
+                selected?.classList.add(
+                    "active"
+                );
+
+            }
+
+            updateMatterStats();
+
+        }
+    );
+
+/* =========================================================
+   UNDO / REDO
+   ========================================================= */
+
+document
+    .getElementById("undo")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            if(
+                state.matterHistory.length === 0
+            ){
+
+                showToast(
+                    "Niente da annullare."
+                );
+
+                return;
+
+            }
+
+            state.matterFuture.push(
+                cloneMatter()
+            );
+
+            state.matter =
+                state.matterHistory.pop();
+
+            renderMatter();
+
+            saveMatter(false);
+
+            showToast(
+                "Azione annullata."
+            );
+
+        }
+    );
+
+document
+    .getElementById("redo")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            if(
+                state.matterFuture.length === 0
+            ){
+
+                showToast(
+                    "Niente da ripristinare."
+                );
+
+                return;
+
+            }
+
+            state.matterHistory.push(
+                cloneMatter()
+            );
+
+            state.matter =
+                state.matterFuture.pop();
+
+            renderMatter();
+
+            saveMatter(false);
+
+            showToast(
+                "Azione ripristinata."
+            );
+
+        }
+    );
+
+/* =========================================================
+   CLEAR
+   ========================================================= */
+
+document
+    .getElementById("clearMatter")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            if(
+                state.matter.length === 0
+            ){
+
+                showToast(
+                    "La griglia è già vuota."
+                );
+
+                return;
+
+            }
+
+            const yes =
+                confirm(
+                    "Vuoi cancellare tutto il progetto?"
+                );
+
+            if(!yes){
+                return;
+            }
+
+            pushMatterHistory();
+
+            state.matter = [];
+
+            renderMatter();
+
+            saveMatter(false);
+
+            showToast(
+                "Progetto svuotato."
+            );
+
+        }
+    );
+
+/* =========================================================
+   SAVE MATTER
+   ========================================================= */
+
+function saveMatter(notify=true){
+
+    saveState();
+
+    if(notify){
+
+        showToast(
+            "Progetto Materia salvato."
+        );
+
+    }
+
+}
+
+document
+    .getElementById("saveMatter")
+    .addEventListener(
+        "click",
+        ()=>{
+            saveMatter(true);
+        }
+    );
+
+/* =========================================================
+   MATTER REALIZATION
+   ========================================================= */
+
+const realizationStage =
+    document.getElementById(
+        "realizationStage"
+    );
+
+const spawnContainer =
+    document.getElementById(
+        "spawnContainer"
+    );
+
+const realizationProgress =
+    document.getElementById(
+        "realizationProgress"
+    );
+
+let realizationTimer =
+    null;
+
+function realizeMatter(){
+
+    if(
+        state.matter.length === 0
+    ){
+
+        showToast(
+            "Disegna prima qualcosa nella griglia."
+        );
+
+        return;
+
+    }
+
+    clearTimeout(
+        realizationTimer
+    );
+
+    spawnContainer.innerHTML = "";
+
+    realizationProgress.style.width =
+        "0%";
+
+    realizationStage.classList.add(
+        "active"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+
+    const matter =
+        [...state.matter];
+
+    document.getElementById(
+        "realizationMaterial"
+    ).textContent =
+        matter.length +
+        " UNITÀ IN MATERIALIZZAZIONE";
+
+    /*
+       Calcolo dimensioni visive.
+       Il disegno viene centrato e convertito
+       in coordinate 3D.
+    */
+
+    const minX =
+        Math.min(
+            ...matter.map(
+                b=>b.x
+            )
+        );
+
+    const maxX =
+        Math.max(
+            ...matter.map(
+                b=>b.x
+            )
+        );
+
+    const minY =
+        Math.min(
+            ...matter.map(
+                b=>b.y
+            )
+        );
+
+    const maxY =
+        Math.max(
+            ...matter.map(
+                b=>b.y
+            )
+        );
+
+    const centerX =
+        (minX + maxX) / 2;
+
+    const centerY =
+        (minY + maxY) / 2;
+
+    const total =
+        matter.length;
+
+    matter.forEach(
+        (block,index)=>{
+
+            const material =
+                materials[
+                    block.material
+                ];
+
+            const cube =
+                document.createElement(
+                    "div"
+                );
+
+            cube.className =
+                "spawnCube";
+
+            cube.style.setProperty(
+                "--cube",
+                material.color
+            );
+
+            /*
+               Coordinate target.
+               X = larghezza
+               Y = altezza
+               Z = profondità
+            */
+
+            const targetX =
+                (block.x - centerX) *
+                31;
+
+            const targetY =
+                (block.y - centerY) *
+                31;
+
+            const targetZ =
+                Math.sin(
+                    block.x * .8
+                ) * 5;
+
+            /*
+               Punto di partenza:
+               molto lontano e casuale.
+            */
+
+            const startX =
+                (Math.random()-.5) *
+                700;
+
+            const startY =
+                (Math.random()-.5) *
+                500;
+
+            const startZ =
+                Math.random() *
+                700 + 200;
+
+            cube.style.setProperty(
+                "--sx",
+                startX + "px"
+            );
+
+            cube.style.setProperty(
+                "--sy",
+                startY + "px"
+            );
+
+            cube.style.setProperty(
+                "--sz",
+                startZ + "px"
+            );
+
+            cube.style.setProperty(
+                "--tx",
+                targetX + "px"
+            );
+
+            cube.style.setProperty(
+                "--ty",
+                targetY + "px"
+            );
+
+            cube.style.setProperty(
+                "--tz",
+                targetZ + "px"
+            );
+
+            const delay =
+                Math.min(
+                    index * .035,
+                    4
+                );
+
+            cube.style.setProperty(
+                "--delay",
+                delay + "s"
+            );
+
+            cube.innerHTML = `
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            `;
+
+            spawnContainer.appendChild(
+                cube
+            );
+
+            setTimeout(
+                ()=>{
+                    const progress =
+                        ((index + 1) / total) *
+                        100;
+
+                    realizationProgress.style.width =
+                        progress + "%";
+                },
+                delay * 1000
+            );
+
+        }
+    );
+
+    realizationTimer =
+        setTimeout(
+            ()=>{
+                document.getElementById(
+                    "realizationMaterial"
+                ).textContent =
+                    "MATERIALIZZAZIONE COMPLETATA";
+
+                showToast(
+                    "Materia realizzata."
+                );
+            },
+            Math.min(
+                matter.length * 35 + 1000,
+                6000
+            )
+        );
+
+}
+
+document
+    .getElementById("realize")
+    .addEventListener(
+        "click",
+        realizeMatter
+    );
+
+function closeRealization(){
+
+    realizationStage.classList.remove(
+        "active"
+    );
+
+    document.body.style.overflow =
+        "";
+
+    clearTimeout(
+        realizationTimer
+    );
+
+}
+
+document
+    .getElementById(
+        "closeRealization"
+    )
+    .addEventListener(
+        "click",
+        closeRealization
+    );
+
+/* =========================================================
+   CUSTOMIZATION
+   ========================================================= */
+
+function applyAccent(){
+
+    document.documentElement.style
+        .setProperty(
+            "--accent",
+            state.accent
+        );
+
+    document.documentElement.style
+        .setProperty(
+            "--accent2",
+            lightenColor(
+                state.accent
+            )
+        );
+
+    document.documentElement.style
+        .setProperty(
+            "--accentDark",
+            darkenColor(
+                state.accent
+            )
+        );
+
+}
+
+function hexToRGB(hex){
+
+    hex =
+        hex.replace(
+            "#",
+            ""
+        );
+
+    if(hex.length === 3){
+
+        hex =
+            hex
+                .split("")
+                .map(
+                    char=>char+char
+                )
+                .join("");
+
+    }
+
+    return {
+
+        r:parseInt(
+            hex.substring(0,2),
+            16
+        ),
+
+        g:parseInt(
+            hex.substring(2,4),
+            16
+        ),
+
+        b:parseInt(
+            hex.substring(4,6),
+            16
+        )
+
+    };
+
+}
+
+function rgbToHex(
+    r,
+    g,
+    b
+){
+
+    return "#" +
+        [r,g,b]
+        .map(
+            value=>
+                Math.max(
+                    0,
+                    Math.min(
+                        255,
+                        Math.round(value)
+                    )
+                )
+                .toString(16)
+                .padStart(2,"0")
+        )
+        .join("");
+
+}
+
+function lightenColor(hex){
+
+    const rgb =
+        hexToRGB(hex);
+
+    return rgbToHex(
+        rgb.r + (255-rgb.r)*.25,
+        rgb.g + (255-rgb.g)*.25,
+        rgb.b + (255-rgb.b)*.25
+    );
+
+}
+
+function darkenColor(hex){
+
+    const rgb =
+        hexToRGB(hex);
+
+    return rgbToHex(
+        rgb.r*.48,
+        rgb.g*.48,
+        rgb.b*.48
+    );
+
+}
+
+document
+    .getElementById(
+        "accentPicker"
+    )
+    .addEventListener(
+        "input",
+        event=>{
+
+            state.accent =
+                event.target.value;
+
+            applyAccent();
+
+            saveState();
+
+        }
+    );
+
+document
+    .getElementById(
+        "glowRange"
+    )
+    .addEventListener(
+        "input",
+        event=>{
+
+            state.glow =
+                Number(
+                    event.target.value
+                );
+
+            document.documentElement
+                .style
+                .setProperty(
+                    "--glowStrength",
+                    state.glow
+                );
+
+            saveState();
+
+        }
+    );
+
+document
+    .getElementById(
+        "backgroundSelect"
+    )
+    .addEventListener(
+        "change",
+        event=>{
+
+            state.background =
+                event.target.value;
+
+            applyBackground();
+
+            saveState();
+
+        }
+    );
+
+function applyBackground(){
+
+    if(
+        state.background ===
+        "red"
+    ){
+
+        document.body.style.background =
+            `
+            radial-gradient(
+                circle at 70% 10%,
+                rgba(255,0,30,.15),
+                transparent 30%
+            ),
+            #080000
+            `;
+
+    }else if(
+        state.background ===
+        "black"
+    ){
+
+        document.body.style.background =
+            "#000";
+
+    }else if(
+        state.background ===
+        "purple"
+    ){
+
+        document.body.style.background =
+            `
+            radial-gradient(
+                circle at 70% 10%,
+                rgba(110,60,255,.14),
+                transparent 30%
+            ),
+            #050407
+            `;
+
+    }else{
+
+        document.body.style.background =
+            `
+            radial-gradient(
+                circle at 75% 10%,
+                rgba(255,31,53,.08),
+                transparent 28%
+            ),
+            #050505
+            `;
+
+    }
+
+}
+
+document
+    .getElementById(
+        "motionSwitch"
+    )
+    .addEventListener(
+        "click",
+        event=>{
+
+            state.motion =
+                !state.motion;
+
+            event.currentTarget
+                .classList.toggle(
+                    "on",
+                    state.motion
+                );
+
+            document.body
+                .classList.toggle(
+                    "noMotion",
+                    !state.motion
+                );
+
+            saveState();
+
+        }
+    );
+
+document
+    .getElementById(
+        "densitySelect"
+    )
+    .addEventListener(
+        "change",
+        event=>{
+
+            state.density =
+                event.target.value;
+
+            applyDensity();
+
+            saveState();
+
+        }
+    );
+
+function applyDensity(){
+
+    document.body.dataset.density =
+        state.density;
+
+    if(
+        state.density ===
+        "compact"
+    ){
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--radius",
+                "15px"
+            );
+
+    }else if(
+        state.density ===
+        "large"
+    ){
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--radius",
+                "27px"
+            );
+
+    }else{
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--radius",
+                "20px"
+            );
+
+    }
+
+}
+
+/* =========================================================
+   IDENTITY
+   ========================================================= */
+
+document
+    .getElementById(
+        "applyIdentity"
+    )
+    .addEventListener(
+        "click",
+        ()=>{
+
+            const title =
+                document.getElementById(
+                    "customTitle"
+                ).value.trim();
+
+            const subtitle =
+                document.getElementById(
+                    "customSubtitle"
+                ).value.trim();
+
+            if(title){
+
+                state.title =
+                    title;
+
+                document.getElementById(
+                    "logoTitle"
+                ).textContent =
+                    title;
+
+            }
+
+            if(subtitle){
+
+                state.subtitle =
+                    subtitle;
+
+                document.getElementById(
+                    "logoSub"
+                ).textContent =
+                    subtitle;
+
+            }
+
+            saveState();
+
+            showToast(
+                "Identità aggiornata."
+            );
+
+        }
+    );
+
+/* =========================================================
+   RANDOM ACCENT
+   ========================================================= */
+
+document
+    .getElementById(
+        "randomAccent"
+    )
+    .addEventListener(
+        "click",
+        ()=>{
+
+            const colors = [
+
+                "#ff1f35",
+                "#ff4d00",
+                "#ff0066",
+                "#b300ff",
+                "#7050ff",
+                "#00a8ff",
+                "#00d5a0",
+                "#ffd000"
+
+            ];
+
+            state.accent =
+                colors[
+                    Math.floor(
+                        Math.random() *
+                        colors.length
+                    )
+                ];
+
+            document.getElementById(
+                "accentPicker"
+            ).value =
+                state.accent;
+
+            applyAccent();
+
+            saveState();
+
+            showToast(
+                "Nuovo colore selezionato."
+            );
+
+        }
+    );
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetEverything(){
+
+    const yes =
+        confirm(
+            "Vuoi ripristinare completamente Silent Scream?"
+        );
+
+    if(!yes){
+        return;
+    }
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    location.reload();
+
+}
+
+document
+    .getElementById(
+        "resetButton"
+    )
+    .addEventListener(
+        "click",
+        resetEverything
+    );
+
+document
+    .getElementById(
+        "resetAll"
+    )
+    .addEventListener(
+        "click",
+        resetEverything
+    );
+
+/* =========================================================
+   HUB DRAG & DROP
+   ========================================================= */
+
+function setupHubDrag(){
+
+    const container =
+        document.getElementById(
+            "hubSortable"
+        );
+
+    let dragged = null;
+
+    container
+        .querySelectorAll(
+            ".hubCard[draggable]"
+        )
+        .forEach(card=>{
+
+            card.addEventListener(
+                "dragstart",
+                event=>{
+
+                    dragged =
+                        card;
+
+                    card.classList.add(
+                        "dragging"
+                    );
+
+                    event.dataTransfer.effectAllowed =
+                        "move";
+
+                }
+            );
+
+            card.addEventListener(
+                "dragend",
+                ()=>{
+
+                    card.classList.remove(
+                        "dragging"
+                    );
+
+                    dragged = null;
+
+                    saveHubOrder();
+
+                }
+            );
+
+            card.addEventListener(
+                "dragover",
+                event=>{
+
+                    event.preventDefault();
+
+                    if(
+                        !dragged ||
+                        dragged === card
+                    ){
+                        return;
+                    }
+
+                    const rect =
+                        card.getBoundingClientRect();
+
+                    const after =
+                        event.clientY >
+                        rect.top +
+                        rect.height/2;
+
+                    if(after){
+
+                        card.after(
+                            dragged
+                        );
+
+                    }else{
+
+                        card.before(
+                            dragged
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+    restoreHubOrder();
+
+}
+
+function saveHubOrder(){
+
+    const container =
+        document.getElementById(
+            "hubSortable"
+        );
+
+    state.hubOrder =
+        [
+            ...container.children
+        ].map(
+            card=>
+                card.dataset.card
+        );
+
+    saveState();
+
+}
+
+function restoreHubOrder(){
+
+    if(!state.hubOrder){
+        return;
+    }
+
+    const container =
+        document.getElementById(
+            "hubSortable"
+        );
+
+    state.hubOrder.forEach(
+        id=>{
+
+            const card =
+                container.querySelector(
+                    `[data-card="${id}"]`
+                );
+
+            if(card){
+                container.appendChild(
+                    card
+                );
+            }
+
+        }
+    );
+
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimeout;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        toastTimeout
+    );
+
+    toastTimeout =
+        setTimeout(
+            ()=>{
+                toast.classList.remove(
+                    "show"
+                );
+            },
+            2200
+        );
+
+}
+
+/* =========================================================
+   BACKGROUND PARTICLES
+   ========================================================= */
+
+const canvas =
+    document.getElementById(
+        "stars"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+let particles = [];
+
+let mouseX = -1000;
+let mouseY = -1000;
+
+function resizeCanvas(){
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+    canvas.width =
+        window.innerWidth * dpr;
+
+    canvas.height =
+        window.innerHeight * dpr;
+
+    canvas.style.width =
+        window.innerWidth + "px";
+
+    canvas.style.height =
+        window.innerHeight + "px";
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    createParticles();
+
+}
+
+function createParticles(){
+
+    particles = [];
+
+    const amount =
+        window.innerWidth < 700
+        ? 35
+        : 80;
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        particles.push({
+
+            x:
+                Math.random() *
+                window.innerWidth,
+
+            y:
+                Math.random() *
+                window.innerHeight,
+
+            size:
+                Math.random() *
+                1.5 + .3,
+
+            speed:
+                Math.random() *
+                .3 + .05,
+
+            alpha:
+                Math.random() *
+                .35 + .05,
+
+            drift:
+                Math.random() *
+                Math.PI * 2
+
+        });
+
+    }
+
+}
+
+function animateStars(){
+
+    ctx.clearRect(
+        0,
+        0,
+        window.innerWidth,
+        window.innerHeight
+    );
+
+    particles.forEach(
+        particle=>{
+
+            particle.y -=
+                particle.speed;
+
+            particle.drift +=
+                .004;
+
+            particle.x +=
+                Math.sin(
+                    particle.drift
+                ) * .08;
+
+            if(
+                particle.y < -5
+            ){
+
+                particle.y =
+                    window.innerHeight + 5;
+
+                particle.x =
+                    Math.random() *
+                    window.innerWidth;
+
+            }
+
+            const dx =
+                particle.x -
+                mouseX;
+
+            const dy =
+                particle.y -
+                mouseY;
+
+            const distance =
+                Math.sqrt(
+                    dx*dx +
+                    dy*dy
+                );
+
+            let alpha =
+                particle.alpha;
+
+            if(
+                distance < 150
+            ){
+
+                alpha +=
+                    (
+                        1 -
+                        distance/150
+                    ) * .2;
+
+            }
+
+            ctx.beginPath();
+
+            ctx.arc(
+                particle.x,
+                particle.y,
+                particle.size,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle =
+                `rgba(255,31,53,${alpha})`;
+
+            ctx.fill();
+
+        }
+    );
+
+    requestAnimationFrame(
+        animateStars
+    );
+
+}
+
+window.addEventListener(
+    "mousemove",
+    event=>{
+
+        mouseX =
+            event.clientX;
+
+        mouseY =
+            event.clientY;
+
+    }
+);
+
+window.addEventListener(
+    "touchmove",
+    event=>{
+
+        if(
+            event.touches[0]
+        ){
+
+            mouseX =
+                event.touches[0].clientX;
+
+            mouseY =
+                event.touches[0].clientY;
+
+        }
+
+    },
+    {
+        passive:true
+    }
+);
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+loadState();
+
+applyAccent();
+
+applyBackground();
+
+applyDensity();
+
+document.getElementById(
+    "accentPicker"
+).value =
+    state.accent;
+
+document.getElementById(
+    "glowRange"
+).value =
+    state.glow;
+
+document.getElementById(
+    "backgroundSelect"
+).value =
+    state.background;
+
+document.getElementById(
+    "densitySelect"
+).value =
+    state.density;
+
+document.getElementById(
+    "motionSwitch"
+).classList.toggle(
+    "on",
+    state.motion
+);
+
+document.body.classList.toggle(
+    "noMotion",
+    !state.motion
+);
+
+document.getElementById(
+    "customTitle"
+).value =
+    state.title;
+
+document.getElementById(
+    "customSubtitle"
+).value =
+    state.subtitle;
+
+document.getElementById(
+    "logoTitle"
+).textContent =
+    state.title;
+
+document.getElementById(
+    "logoSub"
+).textContent =
+    state.subtitle;
+
+renderFactions();
+
+createGrid();
+
+setupHubDrag();
+
+resizeCanvas();
+
+animateStars();
+
+restorePage();
+
+updateMatterStats();
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(
+            event.target.tagName ===
+                "INPUT" ||
+            event.target.tagName ===
+                "TEXTAREA" ||
+            event.target.tagName ===
+                "SELECT"
+        ){
+
+            return;
+
+        }
+
+        if(event.key === "1"){
+            showPage("home");
+        }
+
+        if(event.key === "2"){
+            showPage("hub");
+        }
+
+        if(event.key === "3"){
+            showPage("domains");
+        }
+
+        if(event.key === "4"){
+            showPage("archive");
+        }
+
+        if(event.key === "5"){
+            showPage("matter");
+        }
+
+        if(event.key === "6"){
+            showPage("settings");
+        }
+
+        if(
+            event.key === "e" ||
+            event.key === "E"
+        ){
+
+            if(
+                state.matter.length
+            ){
+
+                realizeMatter();
+
+            }
+
+        }
+
+    }
+);
+
+</script>
+
 </body>
 </html>
+```
